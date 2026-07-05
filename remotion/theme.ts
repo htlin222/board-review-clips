@@ -15,7 +15,7 @@ export const theme = {
   },
   marker: { boilFps: 10, boilJitterPx: 1.5, strokeWidth: 3 },
   tts: { voice: "zh-TW-HsiaoChenNeural", rate: "+0%" },
-  sfx: { begin: "sfx/Tink.mp3", click: "sfx/Pop.mp3", end: "sfx/Glass.mp3" },
+  sfx: { begin: "sfx/Tink.m4a", click: "sfx/Pop.m4a", end: "sfx/Glass.m4a" },
   safeZone: { shorts: { w: 1080, h: 1350 } },
   fps: 30,
 } as const;
