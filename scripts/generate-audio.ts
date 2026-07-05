@@ -4,7 +4,7 @@ import { join } from "path";
 import { theme } from "../remotion/theme";
 import { parseWordTimings } from "../remotion/lib/timing";
 import type { Card, CardTiming, SegmentTiming } from "../remotion/lib/types";
-import { parseMarkers } from "../remotion/lib/markers";
+import { parseMarkers, attachWordMarkers } from "../remotion/lib/markers";
 
 const CARDS_DIR = "cards";
 const AUDIO_DIR = "remotion/audio";
@@ -22,11 +22,11 @@ async function synthesizeSegment(cardId: string, key: string, text: string): Pro
   const sourcePath = join(dir, "source.txt");
 
   // Marker syntax (**word**) is for on-screen highlighting only — TTS should speak plain text.
-  const spokenText = parseMarkers(text).plainText;
+  const { plainText: spokenText, markers } = parseMarkers(text);
 
   if (existsSync(sourcePath) && readFileSync(sourcePath, "utf-8") === spokenText) {
     const raw = JSON.parse(readFileSync(join(dir, "metadata.json"), "utf-8"));
-    const words = parseWordTimings(raw);
+    const words = attachWordMarkers(parseWordTimings(raw), spokenText, markers);
     return {
       key,
       text,
@@ -47,7 +47,7 @@ async function synthesizeSegment(cardId: string, key: string, text: string): Pro
 
   writeFileSync(sourcePath, spokenText);
   const raw = JSON.parse(readFileSync(metadataFilePath!, "utf-8"));
-  const words = parseWordTimings(raw);
+  const words = attachWordMarkers(parseWordTimings(raw), spokenText, markers);
 
   return {
     key,

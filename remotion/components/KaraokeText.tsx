@@ -19,7 +19,7 @@ export function KaraokeText({
     <div style={{ fontFamily: theme.fonts.family, fontSize, color: theme.colors.ink, lineHeight: 1.4 }}>
       {words.map((w, i) => (
         <span key={i} style={{ opacity: i <= active ? 1 : 0.35, marginRight: "0.3em" }}>
-          <MarkerText text={w.word} frame={frame} fontSize={fontSize} />
+          <MarkerText text={w.word} marked={w.marked} frame={frame} fontSize={fontSize} />
         </span>
       ))}
     </div>

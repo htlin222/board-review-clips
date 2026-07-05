@@ -11,6 +11,7 @@ export type WordTiming = {
   word: string;
   startMs: number;
   endMs: number;
+  marked?: boolean;
 };
 
 export type SegmentTiming = {

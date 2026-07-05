@@ -1,3 +1,5 @@
+import type { WordTiming } from "./types";
+
 export type Marker = { start: number; end: number };
 export type ParsedMarkers = { plainText: string; markers: Marker[] };
 
@@ -18,4 +20,18 @@ export function parseMarkers(input: string): ParsedMarkers {
   plainText += input.slice(lastIndex);
 
   return { plainText, markers };
+}
+
+export function attachWordMarkers(words: WordTiming[], plainText: string, markers: Marker[]): WordTiming[] {
+  let cursor = 0;
+  return words.map((w) => {
+    const start = plainText.indexOf(w.word, cursor);
+    if (start === -1) {
+      return { ...w, marked: false };
+    }
+    const end = start + w.word.length;
+    cursor = end;
+    const marked = markers.some((m) => start < m.end && end > m.start);
+    return { ...w, marked };
+  });
 }
