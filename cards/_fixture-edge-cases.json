@@ -1,5 +1,7 @@
 {
   "id": "fixture-edge-cases",
+  "main": "Test Suite",
+  "section": "Fixtures",
   "topic": "Test Fixture",
   "author": "",
   "title": "Edge case card with one detail paragraph",

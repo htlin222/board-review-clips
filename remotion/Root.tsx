@@ -14,7 +14,8 @@ async function loadTiming(cardId: string): Promise<CardTiming> {
   return response.json();
 }
 
-const defaultTiming: CardTiming = { cardId: "", topic: "", author: "", segments: [] };
+const defaultTiming: CardTiming = { cardId: "", main: "", section: "", topic: "", author: "", segments: [] };
+const defaultProps = { cardId: "scd-median-survival", timing: defaultTiming, main: "", section: "", topic: "", author: "" };
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -26,11 +27,14 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={theme.fps}
         durationInFrames={150}
-        defaultProps={{ cardId: "scd-median-survival", timing: defaultTiming, topic: "", author: "" }}
+        defaultProps={defaultProps}
         calculateMetadata={async ({ props }) => {
           const timing = await loadTiming(props.cardId);
           const { totalFrames } = buildTimeline(timing);
-          return { durationInFrames: totalFrames, props: { ...props, timing, topic: timing.topic, author: timing.author } };
+          return {
+            durationInFrames: totalFrames,
+            props: { ...props, timing, main: timing.main, section: timing.section, topic: timing.topic, author: timing.author },
+          };
         }}
       />
       <Composition
@@ -40,11 +44,14 @@ export const RemotionRoot: React.FC = () => {
         height={1920}
         fps={theme.fps}
         durationInFrames={150}
-        defaultProps={{ cardId: "scd-median-survival", timing: defaultTiming, topic: "", author: "" }}
+        defaultProps={defaultProps}
         calculateMetadata={async ({ props }) => {
           const timing = await loadTiming(props.cardId);
           const { totalFrames } = buildTimeline(timing);
-          return { durationInFrames: totalFrames, props: { ...props, timing, topic: timing.topic, author: timing.author } };
+          return {
+            durationInFrames: totalFrames,
+            props: { ...props, timing, main: timing.main, section: timing.section, topic: timing.topic, author: timing.author },
+          };
         }}
       />
     </>

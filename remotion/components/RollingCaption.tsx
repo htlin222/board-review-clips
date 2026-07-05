@@ -1,7 +1,6 @@
 import { theme } from "../theme";
 import { chunkWords, activeChunkIndex } from "../lib/captions";
 import { activeWordIndex } from "../lib/karaoke";
-import { breatheScale } from "../lib/breathe";
 import { boilJitter } from "../lib/boil";
 import { MarkerText } from "./MarkerText";
 import type { WordTiming } from "../lib/types";
@@ -12,34 +11,35 @@ export function RollingCaption({
   frame,
   fontSize,
   maxWordsPerChunk = 14,
-  variant = "breathe",
+  boil = false,
+  fontFamily = theme.fonts.family,
 }: {
   words: WordTiming[];
   currentMs: number;
   frame: number;
   fontSize: number;
   maxWordsPerChunk?: number;
-  variant?: "boil" | "breathe";
+  boil?: boolean;
+  fontFamily?: string;
 }) {
   const chunks = chunkWords(words, maxWordsPerChunk);
   const activeChunk = chunks[activeChunkIndex(chunks, currentMs)];
   if (!activeChunk) return null;
 
   const active = activeWordIndex(activeChunk.words, currentMs);
-  const scale = variant === "breathe" ? breatheScale(frame, theme) : 1;
   return (
     <div
       style={{
-        fontFamily: theme.fonts.family,
+        fontFamily,
         fontSize,
         color: theme.colors.ink,
         textAlign: "left",
         lineHeight: 1.5,
-        transform: `scale(${scale})`,
       }}
     >
       {activeChunk.words.map((w, i) => {
-        const jitter = variant === "boil" ? boilJitter(w.word, i, frame, theme) : null;
+        const j = boil ? boilJitter(w.word, i, frame, theme) : null;
+        const drawProgress = Math.max(0, Math.min(1, (currentMs - w.startMs) / theme.marker.drawMs));
         return (
           <span
             key={i}
@@ -47,10 +47,10 @@ export function RollingCaption({
               opacity: i <= active ? 1 : 0.35,
               marginRight: "0.3em",
               display: "inline-block",
-              transform: jitter ? `translate(${jitter.x}px, ${jitter.y}px)` : undefined,
+              transform: j ? `translate(${j.x}px, ${j.y}px)` : undefined,
             }}
           >
-            <MarkerText text={w.word} marked={w.marked} frame={frame} fontSize={fontSize} />
+            <MarkerText text={w.word} marked={w.marked} frame={frame} fontSize={fontSize} drawProgress={drawProgress} />
           </span>
         );
       })}

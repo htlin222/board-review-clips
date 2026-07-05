@@ -11,23 +11,20 @@ export function ProgressBar({
   frame: number;
   currentPhaseStart: number;
 }) {
-  const { wipeFrames, dotSize, dotGap, dotColorActive, dotColorInactive } = theme.progress;
+  const { wipeFrames, dotSize, dotGap, fontSize, dotColorActive, dotColorInactive } = theme.progress;
   const wipeT = Math.max(0, Math.min(1, (frame - currentPhaseStart) / wipeFrames));
 
   return (
     <div
       style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
         display: "flex",
         alignItems: "center",
-        gap: 14,
+        gap: 21,
         fontFamily: theme.fonts.family,
         whiteSpace: "nowrap",
       }}
     >
-      <span style={{ fontSize: 20, color: theme.colors.ink, opacity: 0.55, fontVariantNumeric: "tabular-nums", letterSpacing: 1 }}>
+      <span style={{ fontSize, color: theme.colors.ink, opacity: 0.55, fontVariantNumeric: "tabular-nums", letterSpacing: 1 }}>
         {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
       </span>
       <div style={{ display: "flex", gap: dotGap, flexShrink: 0 }}>

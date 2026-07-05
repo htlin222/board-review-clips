@@ -16,8 +16,6 @@ describe("boilJitter", () => {
   });
 
   it("changes between boil buckets", () => {
-    const a = boilJitter("word", 0, 0, theme);
-    const b = boilJitter("word", 0, 29, theme);
-    expect(a).not.toEqual(b);
+    expect(boilJitter("word", 0, 0, theme)).not.toEqual(boilJitter("word", 0, 29, theme));
   });
 });

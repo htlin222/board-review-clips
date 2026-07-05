@@ -6,6 +6,8 @@ import type { CardTiming } from "./types";
 function makeTiming(durationsMs: number[]): CardTiming {
   return {
     cardId: "test",
+    main: "Test Main",
+    section: "Test Section",
     topic: "Test Topic",
     author: "Test Author",
     segments: durationsMs.map((durationMs, i) => ({

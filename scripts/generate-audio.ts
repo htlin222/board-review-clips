@@ -67,7 +67,14 @@ async function processCard(cardPath: string) {
     segments.push(await synthesizeSegment(card.id, key, text));
   }
 
-  const timing: CardTiming = { cardId: card.id, topic: card.topic, author: card.author, segments };
+  const timing: CardTiming = {
+    cardId: card.id,
+    main: card.main,
+    section: card.section,
+    topic: card.topic,
+    author: card.author,
+    segments,
+  };
   writeFileSync(join(AUDIO_DIR, card.id, "timing.json"), JSON.stringify(timing, null, 2));
   console.log(`  wrote timing.json (${segments.length} segments)`);
 }
