@@ -22,11 +22,11 @@ const DETAIL_INDENT = 40;
 
 // Fixed y-anchors so the yellow answer box never shifts when a detail line's
 // height changes. The detail lives in its own band and centers within it.
-const TITLE_TOP = SAFE_TOP;
+const TITLE_TOP = SAFE_TOP + 40;
 const ANSWER_TOP = SAFE_TOP + 360;
-const DETAIL_BAND_TOP = SAFE_TOP + 800;
+const DETAIL_BAND_TOP = SAFE_TOP + 720;
 const PROGRESS_TOP = SAFE_BOTTOM + 20;
-const DETAIL_BAND_BOTTOM = PROGRESS_TOP - 40;
+const DETAIL_BAND_BOTTOM = PROGRESS_TOP - 120;
 
 export function Shorts({
   timing,
@@ -74,7 +74,7 @@ export function Shorts({
         <GridBackground />
 
         <AbsoluteFill style={{ opacity: fadeOpacity }}>
-          <Header main={main} section={section} topic={topic} author={author} position="top" top={SAFE_TOP - 120} sideInset={SAFE_LEFT} />
+          <Header main={main} section={section} topic={topic} author={author} position="top" top={SAFE_TOP - 40} sideInset={CONTENT_LEFT} />
 
           <Sequence from={0} layout="none">
             <div style={{ position: "absolute", top: TITLE_TOP, left: CONTENT_LEFT, width: CONTENT_WIDTH }}>
@@ -156,7 +156,7 @@ export function Shorts({
               })}
           </div>
 
-          <div style={{ position: "absolute", top: PROGRESS_TOP, left: CONTENT_LEFT }}>
+          <div style={{ position: "absolute", top: PROGRESS_TOP, left: 0, width: 1080, display: "flex", justifyContent: "center" }}>
             <ProgressBar current={progressIndex} total={timing.segments.length} frame={frame} currentPhaseStart={progressPhaseStart} />
           </div>
 
