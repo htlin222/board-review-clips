@@ -30,7 +30,7 @@
   "scripts": {
     "audio": "tsx scripts/generate-audio.ts",
     "render": "tsx scripts/render.ts",
-    "studio": "remotion studio remotion/Root.tsx",
+    "studio": "remotion studio remotion/index.ts",
     "test": "vitest run"
   },
   "dependencies": {
@@ -1091,6 +1091,7 @@ git commit -m "feat: add RollingCaption component for Shorts word chunks"
 
 **Files:**
 - Create: `remotion/Root.tsx`
+- Create: `remotion/index.ts`
 - Create: `remotion/lib/useCardTimeline.ts`
 
 **Step 1: Build the shared timeline hook**
@@ -1121,19 +1122,22 @@ export function buildTimeline(timing: CardTiming): { phases: PhaseFrame[]; total
 
 **Step 2: Register compositions in Root.tsx**
 
+Important: `Root.tsx` is bundled by webpack targeting a **browser** environment — Remotion Studio and `remotion still`/`render` all load this bundle into headless Chrome via Puppeteer. Node built-ins like `fs`/`path` do not exist there, so `calculateMetadata` must **not** use `readFileSync`. Instead, bake every field the composition needs (including `topic`/`author`) into `timing.json` at pre-processing time (see Task 10's `generate-audio.ts`, which already reads the full `Card` in Node) and load `timing.json` in the browser via `fetch(staticFile(...))` — Remotion serves the `public/` folder over local HTTP during both Studio and render/still, so `fetch` works in both contexts.
+
 ```tsx
-import { Composition } from "remotion";
-import { readFileSync } from "fs";
-import { join } from "path";
+import { Composition, staticFile } from "remotion";
 import { LongForm } from "./compositions/LongForm";
 import { Shorts } from "./compositions/Shorts";
 import { buildTimeline } from "./lib/useCardTimeline";
 import { theme } from "./theme";
 import type { CardTiming } from "./lib/types";
 
-function loadTiming(cardId: string): CardTiming {
-  return JSON.parse(readFileSync(join("remotion/audio", cardId, "timing.json"), "utf-8"));
+async function loadTiming(cardId: string): Promise<CardTiming> {
+  const response = await fetch(staticFile(`audio/${cardId}/timing.json`));
+  return response.json();
 }
+
+const defaultTiming: CardTiming = { cardId: "", topic: "", author: "", segments: [] };
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -1145,11 +1149,11 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={theme.fps}
         durationInFrames={150}
-        defaultProps={{ cardId: "scd-median-survival" }}
+        defaultProps={{ cardId: "scd-median-survival", timing: defaultTiming, topic: "", author: "" }}
         calculateMetadata={async ({ props }) => {
-          const timing = loadTiming(props.cardId);
+          const timing = await loadTiming(props.cardId);
           const { totalFrames } = buildTimeline(timing);
-          return { durationInFrames: totalFrames, props: { ...props, timing } };
+          return { durationInFrames: totalFrames, props: { ...props, timing, topic: timing.topic, author: timing.author } };
         }}
       />
       <Composition
@@ -1159,11 +1163,11 @@ export const RemotionRoot: React.FC = () => {
         height={1920}
         fps={theme.fps}
         durationInFrames={150}
-        defaultProps={{ cardId: "scd-median-survival" }}
+        defaultProps={{ cardId: "scd-median-survival", timing: defaultTiming, topic: "", author: "" }}
         calculateMetadata={async ({ props }) => {
-          const timing = loadTiming(props.cardId);
+          const timing = await loadTiming(props.cardId);
           const { totalFrames } = buildTimeline(timing);
-          return { durationInFrames: totalFrames, props: { ...props, timing } };
+          return { durationInFrames: totalFrames, props: { ...props, timing, topic: timing.topic, author: timing.author } };
         }}
       />
     </>
@@ -1171,16 +1175,42 @@ export const RemotionRoot: React.FC = () => {
 };
 ```
 
+This means `CardTiming` (in `remotion/lib/types.ts`) must carry `topic`/`author` directly:
+
+```ts
+export type CardTiming = {
+  cardId: string;
+  topic: string;
+  author: string;
+  segments: SegmentTiming[];
+};
+```
+
+...and `generate-audio.ts`'s `processCard` must set them when writing `timing.json`: `const timing: CardTiming = { cardId: card.id, topic: card.topic, author: card.author, segments };`.
+
+**Step 2b: Add the real entry point — `remotion/index.ts`**
+
+`Root.tsx` only exports the `RemotionRoot` component — it does not call `registerRoot()`. The Remotion CLI's `bundle()` step reads whatever file path you pass on the command line and requires that **exact file** to literally contain a `registerRoot` call (it greps the file contents before bundling); it does not auto-wrap a bare `RemotionRoot` export for you. So `remotion studio remotion/Root.tsx` / `remotion still remotion/Root.tsx ...` fail immediately with `this file does not contain "registerRoot"` even after the `fs` fix above. The fix is a tiny dedicated entry file — `remotion/index.ts` is one of Remotion's auto-discovered "common path" entry points:
+
+```ts
+import { registerRoot } from "remotion";
+import { RemotionRoot } from "./Root";
+
+registerRoot(RemotionRoot);
+```
+
+Point all CLI/`bundle()` invocations at `remotion/index.ts`, not `remotion/Root.tsx` (see the updated `package.json` `studio` script and Task 17's `render.ts` below).
+
 **Step 3: Verify**
 
 Run: `pnpm exec tsx scripts/generate-audio.ts` (if not already run for this card)
-Run: `pnpm studio`
-Expected: Remotion Studio opens, lists `LongForm` and `Shorts` compositions (they'll error until Task 15/16 create the component files — that's expected here, fix in next tasks).
+Run: `pnpm studio` (now `remotion studio remotion/index.ts` in `package.json`)
+Expected: Remotion Studio opens, lists `LongForm` and `Shorts` compositions. Note: until Task 16 creates `Shorts.tsx`, `Root.tsx`'s static `import { Shorts } from "./compositions/Shorts"` will fail webpack bundling entirely (a missing local module blocks the whole bundle, unlike a per-file type error) — that's expected while Task 16 is pending, and blocks *both* compositions from rendering until Task 16 lands, not just `Shorts`.
 
 **Step 4: Commit**
 
 ```bash
-git add remotion/Root.tsx remotion/lib/useCardTimeline.ts
+git add remotion/Root.tsx remotion/index.ts remotion/lib/useCardTimeline.ts remotion/lib/types.ts scripts/generate-audio.ts package.json
 git commit -m "feat: register compositions and add timeline-from-audio hook"
 ```
 
@@ -1193,8 +1223,13 @@ git commit -m "feat: register compositions and add timeline-from-audio hook"
 
 **Step 1: Implement**
 
+Notes on two easy-to-miss bugs this composition must avoid:
+- `Audio` is deprecated in this Remotion version (renamed to `Html5Audio`, still exported from `"remotion"`) — import it as `Html5Audio as Audio` (or just `Html5Audio`). `startFrom`/`endAt` on it are likewise deprecated in favor of `trimBefore`/`trimAfter`; this composition doesn't trim, so it just drops `startFrom` entirely.
+- Every phase `<Sequence>` (detail-N, answer) must have an explicit `durationInFrames` that ends where the next phase begins (or at `totalFrames` for the last one) — a `<Sequence from={...}>` with no duration renders forever, so without this every later detail paragraph stacks on top of all earlier ones.
+- `<Audio>` has no `from` prop (only `<Sequence>` does) — per-segment audio must be wrapped in its own `<Sequence from={p.startFrame}>`, matching the pattern already used for the click/begin/end sfx.
+
 ```tsx
-import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Html5Audio as Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { theme } from "../theme";
 import { Header } from "../components/Header";
 import { Skeleton } from "../components/Skeleton";
@@ -1203,7 +1238,7 @@ import { baseZoom, pushBump } from "../lib/camera";
 import { buildTimeline } from "../lib/useCardTimeline";
 import type { CardTiming } from "../lib/types";
 
-export function LongForm({ timing, topic, author }: { cardId?: string; timing: CardTiming; topic: string; author: string }) {
+export function LongForm({ timing, topic, author }: { cardId: string; timing: CardTiming; topic: string; author: string }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { phases, totalFrames } = buildTimeline(timing);
@@ -1258,10 +1293,12 @@ export function LongForm({ timing, topic, author }: { cardId?: string; timing: C
 
         {timing.segments
           .filter((s) => s.key.startsWith("detail-"))
-          .map((seg) => {
+          .map((seg, i) => {
             const p = phaseByKey[seg.key];
+            const nextDetailPhase = detailPhases[i + 1];
+            const durationInFrames = (nextDetailPhase ? nextDetailPhase.startFrame : totalFrames) - p.startFrame;
             return (
-              <Sequence key={seg.key} from={p.startFrame}>
+              <Sequence key={seg.key} from={p.startFrame} durationInFrames={durationInFrames}>
                 <div style={{ position: "absolute", top: 620, left: 120, width: 1680 }}>
                   <KaraokeText
                     words={seg.words}
@@ -1288,7 +1325,11 @@ export function LongForm({ timing, topic, author }: { cardId?: string; timing: C
 
       {timing.segments.map((seg) => {
         const p = phaseByKey[seg.key];
-        return <Audio key={seg.key} src={staticFile(seg.audioPath.replace(/^remotion\//, ""))} startFrom={0} from={p.startFrame} />;
+        return (
+          <Sequence key={seg.key} from={p.startFrame}>
+            <Audio src={staticFile(seg.audioPath.replace(/^remotion\//, ""))} />
+          </Sequence>
+        );
       })}
     </AbsoluteFill>
   );
@@ -1332,8 +1373,10 @@ git commit -m "feat: implement LongForm composition with full timeline"
 
 Same phase logic as `LongForm`, but text is constrained to the 1080×1350 safe zone and uses `RollingCaption` instead of full-block `KaraokeText` for answer/detail.
 
+This composition must reuse the same three fixes applied to `LongForm` in Task 15 (see that task's notes for why): import `Html5Audio as Audio` from `"remotion"` (not the deprecated `Audio`), give every detail `<Sequence>` an explicit `durationInFrames` so paragraphs don't stack forever, and wrap each per-segment `<Audio>` in its own `<Sequence from={p.startFrame}>` instead of passing a nonexistent `from` prop directly to `<Audio>`.
+
 ```tsx
-import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Html5Audio as Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { theme } from "../theme";
 import { Header } from "../components/Header";
 import { Skeleton } from "../components/Skeleton";
@@ -1346,7 +1389,7 @@ import type { CardTiming } from "../lib/types";
 const SAFE_TOP = (1920 - theme.safeZone.shorts.h) / 2;
 const SAFE_LEFT = (1080 - theme.safeZone.shorts.w) / 2;
 
-export function Shorts({ timing, topic, author }: { cardId?: string; timing: CardTiming; topic: string; author: string }) {
+export function Shorts({ timing, topic, author }: { cardId: string; timing: CardTiming; topic: string; author: string }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { phases, totalFrames } = buildTimeline(timing);
@@ -1401,10 +1444,12 @@ export function Shorts({ timing, topic, author }: { cardId?: string; timing: Car
 
         {timing.segments
           .filter((s) => s.key.startsWith("detail-"))
-          .map((seg) => {
+          .map((seg, i) => {
             const p = phaseByKey[seg.key];
+            const nextDetailPhase = detailPhases[i + 1];
+            const durationInFrames = (nextDetailPhase ? nextDetailPhase.startFrame : totalFrames) - p.startFrame;
             return (
-              <Sequence key={seg.key} from={p.startFrame}>
+              <Sequence key={seg.key} from={p.startFrame} durationInFrames={durationInFrames}>
                 <div style={{ position: "absolute", top: SAFE_TOP + 600, left: SAFE_LEFT, width: theme.safeZone.shorts.w }}>
                   <RollingCaption
                     words={seg.words}
@@ -1430,7 +1475,11 @@ export function Shorts({ timing, topic, author }: { cardId?: string; timing: Car
 
       {timing.segments.map((seg) => {
         const p = phaseByKey[seg.key];
-        return <Audio key={seg.key} src={staticFile(seg.audioPath.replace(/^remotion\//, ""))} from={p.startFrame} />;
+        return (
+          <Sequence key={seg.key} from={p.startFrame}>
+            <Audio src={staticFile(seg.audioPath.replace(/^remotion\//, ""))} />
+          </Sequence>
+        );
       })}
     </AbsoluteFill>
   );
@@ -1468,7 +1517,9 @@ const CARDS_DIR = "cards";
 const OUT_DIR = "out";
 
 async function main() {
-  const bundleLocation = await bundle({ entryPoint: join("remotion", "Root.tsx") });
+  // Must point at remotion/index.ts (the file that calls registerRoot()), not Root.tsx directly —
+  // see Task 14 Step 2b. bundle() validates that the entry point file literally contains "registerRoot".
+  const bundleLocation = await bundle({ entryPoint: join("remotion", "index.ts") });
   const cardFiles = readdirSync(CARDS_DIR).filter((f) => f.endsWith(".json"));
 
   for (const file of cardFiles) {

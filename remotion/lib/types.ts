@@ -24,5 +24,7 @@ export type SegmentTiming = {
 
 export type CardTiming = {
   cardId: string;
+  topic: string;
+  author: string;
   segments: SegmentTiming[];
 };

@@ -6,7 +6,7 @@
   "scripts": {
     "audio": "tsx scripts/generate-audio.ts",
     "render": "tsx scripts/render.ts",
-    "studio": "remotion studio remotion/Root.tsx",
+    "studio": "remotion studio remotion/index.ts",
     "test": "vitest run"
   },
   "dependencies": {

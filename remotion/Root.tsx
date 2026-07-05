@@ -1,19 +1,16 @@
-import { Composition } from "remotion";
-import { readFileSync } from "fs";
-import { join } from "path";
+import { Composition, staticFile } from "remotion";
 import { LongForm } from "./compositions/LongForm";
 import { Shorts } from "./compositions/Shorts";
 import { buildTimeline } from "./lib/useCardTimeline";
 import { theme } from "./theme";
-import type { Card, CardTiming } from "./lib/types";
+import type { CardTiming } from "./lib/types";
 
-function loadCard(cardId: string): Card {
-  return JSON.parse(readFileSync(join("cards", `${cardId}.json`), "utf-8"));
+async function loadTiming(cardId: string): Promise<CardTiming> {
+  const response = await fetch(staticFile(`audio/${cardId}/timing.json`));
+  return response.json();
 }
 
-function loadTiming(cardId: string): CardTiming {
-  return JSON.parse(readFileSync(join("remotion/audio", cardId, "timing.json"), "utf-8"));
-}
+const defaultTiming: CardTiming = { cardId: "", topic: "", author: "", segments: [] };
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -25,12 +22,11 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
         fps={theme.fps}
         durationInFrames={150}
-        defaultProps={{ cardId: "scd-median-survival" }}
+        defaultProps={{ cardId: "scd-median-survival", timing: defaultTiming, topic: "", author: "" }}
         calculateMetadata={async ({ props }) => {
-          const card = loadCard(props.cardId);
-          const timing = loadTiming(props.cardId);
+          const timing = await loadTiming(props.cardId);
           const { totalFrames } = buildTimeline(timing);
-          return { durationInFrames: totalFrames, props: { ...props, timing, topic: card.topic, author: card.author } };
+          return { durationInFrames: totalFrames, props: { ...props, timing, topic: timing.topic, author: timing.author } };
         }}
       />
       <Composition
@@ -40,12 +36,11 @@ export const RemotionRoot: React.FC = () => {
         height={1920}
         fps={theme.fps}
         durationInFrames={150}
-        defaultProps={{ cardId: "scd-median-survival" }}
+        defaultProps={{ cardId: "scd-median-survival", timing: defaultTiming, topic: "", author: "" }}
         calculateMetadata={async ({ props }) => {
-          const card = loadCard(props.cardId);
-          const timing = loadTiming(props.cardId);
+          const timing = await loadTiming(props.cardId);
           const { totalFrames } = buildTimeline(timing);
-          return { durationInFrames: totalFrames, props: { ...props, timing, topic: card.topic, author: card.author } };
+          return { durationInFrames: totalFrames, props: { ...props, timing, topic: timing.topic, author: timing.author } };
         }}
       />
     </>

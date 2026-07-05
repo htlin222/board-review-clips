@@ -1,4 +1,4 @@
-import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Html5Audio as Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { theme } from "../theme";
 import { Header } from "../components/Header";
 import { Skeleton } from "../components/Skeleton";
@@ -7,7 +7,7 @@ import { baseZoom, pushBump } from "../lib/camera";
 import { buildTimeline } from "../lib/useCardTimeline";
 import type { CardTiming } from "../lib/types";
 
-export function LongForm({ timing, topic, author }: { cardId?: string; timing: CardTiming; topic: string; author: string }) {
+export function LongForm({ timing, topic, author }: { cardId: string; timing: CardTiming; topic: string; author: string }) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const { phases, totalFrames } = buildTimeline(timing);
@@ -62,10 +62,12 @@ export function LongForm({ timing, topic, author }: { cardId?: string; timing: C
 
         {timing.segments
           .filter((s) => s.key.startsWith("detail-"))
-          .map((seg) => {
+          .map((seg, i) => {
             const p = phaseByKey[seg.key];
+            const nextDetailPhase = detailPhases[i + 1];
+            const durationInFrames = (nextDetailPhase ? nextDetailPhase.startFrame : totalFrames) - p.startFrame;
             return (
-              <Sequence key={seg.key} from={p.startFrame}>
+              <Sequence key={seg.key} from={p.startFrame} durationInFrames={durationInFrames}>
                 <div style={{ position: "absolute", top: 620, left: 120, width: 1680 }}>
                   <KaraokeText
                     words={seg.words}
@@ -92,7 +94,11 @@ export function LongForm({ timing, topic, author }: { cardId?: string; timing: C
 
       {timing.segments.map((seg) => {
         const p = phaseByKey[seg.key];
-        return <Audio key={seg.key} src={staticFile(seg.audioPath.replace(/^remotion\//, ""))} startFrom={0} from={p.startFrame} />;
+        return (
+          <Sequence key={seg.key} from={p.startFrame}>
+            <Audio src={staticFile(seg.audioPath.replace(/^remotion\//, ""))} />
+          </Sequence>
+        );
       })}
     </AbsoluteFill>
   );
