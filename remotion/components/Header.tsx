@@ -5,8 +5,8 @@ export function Header({ topic, author, position }: { topic: string; author?: st
     <div
       style={{
         position: "absolute",
-        [position]: 24,
-        left: 24,
+        [position]: theme.layout.headerMargin,
+        left: theme.layout.headerMargin,
         fontFamily: theme.fonts.family,
         fontSize: theme.fonts.headerSize,
         color: theme.colors.ink,

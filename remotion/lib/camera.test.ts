@@ -23,7 +23,20 @@ describe("pushBump", () => {
     expect(pushBump(100 + theme.camera.switchPushFrames, 100, theme)).toBeCloseTo(0);
   });
 
-  it("is 0 before the switch frame", () => {
-    expect(pushBump(50, 100, theme)).toBe(0);
+  it("is 0 well before the ramp-in window starts", () => {
+    expect(pushBump(100 - theme.camera.switchRampInFrames - 1, 100, theme)).toBe(0);
+  });
+
+  it("is 0 well after the decay window ends", () => {
+    expect(pushBump(100 + theme.camera.switchPushFrames + 1, 100, theme)).toBe(0);
+  });
+
+  it("accelerates into the switch instead of ramping linearly", () => {
+    const { switchRampInFrames } = theme.camera;
+    const early = pushBump(100 - Math.round(switchRampInFrames * 0.75), 100, theme);
+    const mid = pushBump(100 - Math.round(switchRampInFrames * 0.5), 100, theme);
+    const late = pushBump(100 - Math.round(switchRampInFrames * 0.25), 100, theme);
+    // ease-in cubic: the gain per equal time-step grows as we approach the switch
+    expect(late - mid).toBeGreaterThan(mid - early);
   });
 });
