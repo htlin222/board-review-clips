@@ -73,7 +73,7 @@ async function processCard(cardPath: string) {
 }
 
 async function main() {
-  const files = readdirSync(CARDS_DIR).filter((f) => f.endsWith(".json"));
+  const files = readdirSync(CARDS_DIR).filter((f) => f.endsWith(".json") && !f.startsWith("_"));
   for (const file of files) {
     await processCard(join(CARDS_DIR, file));
   }
