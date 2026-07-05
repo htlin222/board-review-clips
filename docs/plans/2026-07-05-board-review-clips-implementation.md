@@ -1069,7 +1069,7 @@ export function RollingCaption({
     >
       {activeChunk.words.map((w, i) => (
         <span key={i} style={{ opacity: i <= active ? 1 : 0.35, marginRight: "0.3em" }}>
-          <MarkerText text={w.word} frame={frame} fontSize={fontSize} />
+          <MarkerText text={w.word} marked={w.marked} frame={frame} fontSize={fontSize} />
         </span>
       ))}
     </div>
