@@ -78,7 +78,7 @@ board-review-clips/
 ## 版面差異
 
 - **LongForm**(1920×1080):Answer/Detail 全文一次顯示,karaoke 逐字掃過,類似攤開的 Anki 卡片。Header 固定左上角小字。
-- **Shorts**(1080×1920):所有文字控制在中央 1080×1350 安全區(參考 `youtube-shorts-safe-zone.png`)。Answer/Detail 改用 `RollingCaption`,3~4 行一組滾動,講到哪滾到哪。Header 固定上方小字,避開安全區。
+- **Shorts**(1080×1920):所有文字控制在中央 900×1350 安全區(參考 `youtube-shorts-safe-zone.png`;寬度從原本規劃的 1080 收窄至 900,以留出足夠邊距讓 Ken Burns zoom 在放大到 ~1.10 時不會把貼齊邊緣的文字裁掉)。Answer/Detail 改用 `RollingCaption`,3~4 行一組滾動,講到哪滾到哪。Header 固定上方小字,避開安全區。
 
 兩者共用同一份 card JSON + word-timing 音檔,只有排版元件不同。
 
@@ -93,7 +93,8 @@ export const theme = {
   marker: { boilFps: 10, boilJitterPx: 1.5, strokeWidth: 3 },
   tts: { voice: "zh-TW-HsiaoChenNeural", rate: "+0%" },
   sfx: { begin: "sfx/Tink.aiff", click: "sfx/Pop.aiff", end: "sfx/Glass.aiff" },
-  safeZone: { shorts: { w: 1080, h: 1350 } },
+  // w=900, not 1080: leaves margin so camera zoom (up to baseZoomEnd + switchPushPct ≈ 1.10) never clips edge text.
+  safeZone: { shorts: { w: 900, h: 1350 } },
 };
 ```
 

@@ -172,7 +172,8 @@ export const theme = {
   marker: { boilFps: 10, boilJitterPx: 1.5, strokeWidth: 3 },
   tts: { voice: "zh-TW-HsiaoChenNeural", rate: "+0%" },
   sfx: { begin: "sfx/Tink.mp3", click: "sfx/Pop.mp3", end: "sfx/Glass.mp3" },
-  safeZone: { shorts: { w: 1080, h: 1350 } },
+  // w=900, not 1080: leaves margin so camera zoom (up to baseZoomEnd + switchPushPct ≈ 1.10) never clips edge text.
+  safeZone: { shorts: { w: 900, h: 1350 } },
   fps: 30,
 } as const;
 ```
@@ -628,7 +629,7 @@ git add remotion/lib/captions.ts remotion/lib/captions.test.ts
 git commit -m "feat: add rolling-caption word chunker for Shorts layout"
 ```
 
-> Note: `maxWordsPerChunk = 14` is a starting point (~3-4 lines at `theme.fonts.bodySize` in the 1080-wide safe zone). Task 16 (Shorts composition) is where we render real text and eyeball whether 14 words wraps to 3-4 lines — adjust the constant there if not.
+> Note: `maxWordsPerChunk = 14` is a starting point (~3-4 lines at `theme.fonts.bodySize` in the 900-wide safe zone — narrowed from an original 1080 to leave zoom headroom, see Task 2). Task 16 (Shorts composition) is where we render real text and eyeball whether 14 words wraps to 3-4 lines — adjust the constant there if not.
 
 ---
 
@@ -1371,7 +1372,7 @@ git commit -m "feat: implement LongForm composition with full timeline"
 
 **Step 1: Implement**
 
-Same phase logic as `LongForm`, but text is constrained to the 1080×1350 safe zone and uses `RollingCaption` instead of full-block `KaraokeText` for answer/detail.
+Same phase logic as `LongForm`, but text is constrained to the 900×1350 safe zone (narrowed from an original 1080 wide to leave margin for camera zoom — see Task 2) and uses `RollingCaption` instead of full-block `KaraokeText` for answer/detail.
 
 This composition must reuse the same three fixes applied to `LongForm` in Task 15 (see that task's notes for why): import `Html5Audio as Audio` from `"remotion"` (not the deprecated `Audio`), give every detail `<Sequence>` an explicit `durationInFrames` so paragraphs don't stack forever, and wrap each per-segment `<Audio>` in its own `<Sequence from={p.startFrame}>` instead of passing a nonexistent `from` prop directly to `<Audio>`.
 
