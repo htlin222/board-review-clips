@@ -1,0 +1,13 @@
+{
+  "id": "scd-median-survival",
+  "topic": "Hematology Board Review",
+  "author": "Your Name",
+  "title": "What is the median overall survival of a patient with SCD?",
+  "answer": "The estimated median survival for SCD in developed nations is ~60 years.",
+  "detail": [
+    "The infant and childhood mortality decreased substantially with the introduction of the pneumococcal vaccine.",
+    "Although death related to organ failure does occur in SCD, most deaths occur during a vaso-occlusive crisis related to acute chest syndrome, stroke, or venous thromboembolism (VTE).",
+    "Elevated hemoglobin F levels are associated with **improved outcomes**.",
+    "Coinheritance of **alpha thalassemia** reduces risk of stroke in SCD."
+  ]
+}
