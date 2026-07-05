@@ -15,5 +15,6 @@ export function buildTimeline(timing: CardTiming): { phases: PhaseFrame[]; total
   }
 
   const endHoldFrames = Math.round(1.5 * theme.fps);
-  return { phases, totalFrames: cursor + endHoldFrames };
+  const totalFrames = phases.length > 0 ? phases[phases.length - 1].endFrame + endHoldFrames : endHoldFrames;
+  return { phases, totalFrames };
 }
