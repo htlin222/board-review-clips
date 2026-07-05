@@ -1,5 +1,5 @@
 import { theme } from "../theme";
-import { chunkWords } from "../lib/captions";
+import { chunkWords, activeChunkIndex } from "../lib/captions";
 import { activeWordIndex } from "../lib/karaoke";
 import { MarkerText } from "./MarkerText";
 import type { WordTiming } from "../lib/types";
@@ -18,8 +18,7 @@ export function RollingCaption({
   maxWordsPerChunk?: number;
 }) {
   const chunks = chunkWords(words, maxWordsPerChunk);
-  const chunkIndex = chunks.findIndex((c) => currentMs >= c.startMs && currentMs <= c.endMs);
-  const activeChunk = chunks[chunkIndex === -1 ? chunks.length - 1 : chunkIndex];
+  const activeChunk = chunks[activeChunkIndex(chunks, currentMs)];
   if (!activeChunk) return null;
 
   const active = activeWordIndex(activeChunk.words, currentMs);

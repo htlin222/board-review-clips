@@ -14,3 +14,17 @@ export function chunkWords(words: WordTiming[], maxWordsPerChunk = 14): CaptionC
   }
   return chunks;
 }
+
+export function activeChunkIndex(chunks: CaptionChunk[], currentMs: number): number {
+  if (chunks.length === 0) return -1;
+
+  let result = 0;
+  for (let i = 0; i < chunks.length; i++) {
+    if (chunks[i].startMs <= currentMs) {
+      result = i;
+    } else {
+      break;
+    }
+  }
+  return result;
+}

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { chunkWords } from "./captions";
+import { chunkWords, activeChunkIndex } from "./captions";
 import type { WordTiming } from "./types";
 
 function makeWords(n: number): WordTiming[] {
@@ -32,5 +32,36 @@ describe("chunkWords", () => {
     const chunks = chunkWords(makeWords(3), 14);
     expect(chunks).toHaveLength(1);
     expect(chunks[0].words).toHaveLength(3);
+  });
+});
+
+describe("activeChunkIndex", () => {
+  it("returns the chunk containing currentMs", () => {
+    const chunks = chunkWords(makeWords(30), 14);
+    // chunk 0: words 0-13 (startMs 0, endMs 1390), chunk 1: words 14-27 (startMs 1400, endMs 2790),
+    // chunk 2: words 28-29 (startMs 2800, endMs 2990)
+    expect(activeChunkIndex(chunks, 50)).toBe(0);
+  });
+
+  it("holds the previous chunk during a gap between chunks", () => {
+    const chunks = [
+      { words: [], startMs: 0, endMs: 1000 },
+      { words: [], startMs: 1500, endMs: 2500 },
+    ];
+    expect(activeChunkIndex(chunks, 1200)).toBe(0);
+  });
+
+  it("returns 0 before the first chunk starts (leading silence)", () => {
+    const chunks = [{ words: [], startMs: 500, endMs: 1000 }];
+    expect(activeChunkIndex(chunks, 100)).toBe(0);
+  });
+
+  it("returns the last chunk once time is past the end", () => {
+    const chunks = chunkWords(makeWords(30), 14);
+    expect(activeChunkIndex(chunks, 999_999)).toBe(chunks.length - 1);
+  });
+
+  it("returns -1 for no chunks", () => {
+    expect(activeChunkIndex([], 100)).toBe(-1);
   });
 });
