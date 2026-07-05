@@ -33,6 +33,12 @@ describe("chunkWords", () => {
     expect(chunks).toHaveLength(1);
     expect(chunks[0].words).toHaveLength(3);
   });
+
+  it("handles a single word", () => {
+    const chunks = chunkWords(makeWords(1), 14);
+    expect(chunks).toHaveLength(1);
+    expect(chunks[0].words).toHaveLength(1);
+  });
 });
 
 describe("activeChunkIndex", () => {

@@ -1,0 +1,8 @@
+{
+  "id": "fixture-edge-cases",
+  "topic": "Test Fixture",
+  "author": "",
+  "title": "Edge case card with one detail paragraph",
+  "answer": "Short answer.",
+  "detail": ["Just one detail paragraph to confirm a single-segment card still renders end-to-end."]
+}

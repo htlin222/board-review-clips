@@ -29,6 +29,17 @@ describe("parseMarkers", () => {
     expect(result.plainText).toBe("no markers here");
     expect(result.markers).toEqual([]);
   });
+
+  it("handles nested-looking markers by matching the shortest non-greedy span", () => {
+    const result = parseMarkers("**a** **b** **c**");
+    expect(result.markers).toHaveLength(3);
+  });
+
+  it("preserves Greek letters and special characters", () => {
+    const result = parseMarkers("Coinheritance of **alpha thalassemia** (α) reduces risk.");
+    expect(result.plainText).toContain("α");
+    expect(result.plainText.slice(result.markers[0].start, result.markers[0].end)).toBe("alpha thalassemia");
+  });
 });
 
 describe("attachWordMarkers", () => {
