@@ -6,4 +6,5 @@ dist/
 *.mp4
 remotion/audio/**/*.mp3
 remotion/audio/**/*.json
+remotion/audio/**/*.txt
 public/sfx/
