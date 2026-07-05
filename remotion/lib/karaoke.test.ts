@@ -25,4 +25,12 @@ describe("activeWordIndex", () => {
   it("returns -1 for an empty word list", () => {
     expect(activeWordIndex([], 100)).toBe(-1);
   });
+
+  it("stays on the previous word during a gap between words", () => {
+    const gappy: WordTiming[] = [
+      { word: "Hi", startMs: 0, endMs: 100 },
+      { word: "how", startMs: 150, endMs: 250 },
+    ];
+    expect(activeWordIndex(gappy, 120)).toBe(0);
+  });
 });
