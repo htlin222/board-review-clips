@@ -27,9 +27,9 @@ export function LongForm({ timing, topic, author }: { cardId: string; timing: Ca
 
   return (
     <AbsoluteFill style={{ background: theme.colors.bg }}>
-      <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
-        <Header topic={topic} author={author} position="top" />
+      <Header topic={topic} author={author} position="top" />
 
+      <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
         <Sequence from={0} durationInFrames={titlePhase.endFrame}>
           <div style={{ position: "absolute", top: 120, left: 120, width: 1680 }}>
             <KaraokeText

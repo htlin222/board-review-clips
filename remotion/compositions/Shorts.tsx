@@ -31,9 +31,9 @@ export function Shorts({ timing, topic, author }: { cardId: string; timing: Card
 
   return (
     <AbsoluteFill style={{ background: theme.colors.bg }}>
-      <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
-        <Header topic={topic} author={author} position="top" />
+      <Header topic={topic} author={author} position="top" />
 
+      <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
         <Sequence from={0} durationInFrames={titlePhase.endFrame}>
           <div style={{ position: "absolute", top: SAFE_TOP, left: SAFE_LEFT, width: theme.safeZone.shorts.w }}>
             <KaraokeText
