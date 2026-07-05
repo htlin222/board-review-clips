@@ -1,5 +1,5 @@
 import { MsEdgeTTS, OUTPUT_FORMAT } from "msedge-tts";
-import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, cpSync } from "fs";
 import { join } from "path";
 import { theme } from "../remotion/theme";
 import { parseWordTimings } from "../remotion/lib/timing";
@@ -77,6 +77,8 @@ async function main() {
   for (const file of files) {
     await processCard(join(CARDS_DIR, file));
   }
+
+  cpSync(AUDIO_DIR, "public/audio", { recursive: true });
 }
 
 main();

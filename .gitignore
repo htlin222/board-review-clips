@@ -8,3 +8,4 @@ remotion/audio/**/*.mp3
 remotion/audio/**/*.json
 remotion/audio/**/*.txt
 public/sfx/
+public/audio/

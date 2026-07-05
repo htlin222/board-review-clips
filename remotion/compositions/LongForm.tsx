@@ -1,0 +1,99 @@
+import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { theme } from "../theme";
+import { Header } from "../components/Header";
+import { Skeleton } from "../components/Skeleton";
+import { KaraokeText } from "../components/KaraokeText";
+import { baseZoom, pushBump } from "../lib/camera";
+import { buildTimeline } from "../lib/useCardTimeline";
+import type { CardTiming } from "../lib/types";
+
+export function LongForm({ timing, topic, author }: { cardId?: string; timing: CardTiming; topic: string; author: string }) {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const { phases, totalFrames } = buildTimeline(timing);
+  const byKey = Object.fromEntries(timing.segments.map((s) => [s.key, s]));
+  const phaseByKey = Object.fromEntries(phases.map((p) => [p.key, p]));
+
+  const detailPhases = phases.filter((p) => p.key.startsWith("detail-"));
+  const nearestSwitch = detailPhases.reduce(
+    (best, p) => (Math.abs(p.startFrame - frame) < Math.abs(best - frame) ? p.startFrame : best),
+    -Infinity
+  );
+
+  const zoom = baseZoom(frame, totalFrames, theme) + pushBump(frame, nearestSwitch, theme);
+  const titlePhase = phaseByKey["title"];
+  const answerPhase = phaseByKey["answer"];
+  const titleDone = frame >= titlePhase.endFrame;
+
+  return (
+    <AbsoluteFill style={{ background: theme.colors.bg }}>
+      <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
+        <Header topic={topic} author={author} position="top" />
+
+        <Sequence from={0} durationInFrames={titlePhase.endFrame}>
+          <div style={{ position: "absolute", top: 120, left: 120, width: 1680 }}>
+            <KaraokeText
+              words={byKey["title"].words}
+              currentMs={(frame / fps) * 1000}
+              frame={frame}
+              fontSize={theme.fonts.titleSize}
+            />
+          </div>
+        </Sequence>
+
+        {!titleDone && (
+          <div style={{ position: "absolute", top: 400, left: 120 }}>
+            <Skeleton width={1680} height={500} />
+          </div>
+        )}
+
+        {titleDone && (
+          <Sequence from={answerPhase.startFrame}>
+            <div style={{ position: "absolute", top: 400, left: 120, width: 1680 }}>
+              <KaraokeText
+                words={byKey["answer"].words}
+                currentMs={((frame - answerPhase.startFrame) / fps) * 1000}
+                frame={frame}
+                fontSize={theme.fonts.bodySize}
+              />
+            </div>
+          </Sequence>
+        )}
+
+        {timing.segments
+          .filter((s) => s.key.startsWith("detail-"))
+          .map((seg) => {
+            const p = phaseByKey[seg.key];
+            return (
+              <Sequence key={seg.key} from={p.startFrame}>
+                <div style={{ position: "absolute", top: 620, left: 120, width: 1680 }}>
+                  <KaraokeText
+                    words={seg.words}
+                    currentMs={((frame - p.startFrame) / fps) * 1000}
+                    frame={frame}
+                    fontSize={theme.fonts.bodySize}
+                  />
+                </div>
+              </Sequence>
+            );
+          })}
+      </AbsoluteFill>
+
+      <Audio src={staticFile(theme.sfx.begin)} />
+      {titleDone && <Sequence from={titlePhase.endFrame} durationInFrames={5}><Audio src={staticFile(theme.sfx.click)} /></Sequence>}
+      {detailPhases.map((p) => (
+        <Sequence key={p.key} from={p.startFrame} durationInFrames={5}>
+          <Audio src={staticFile(theme.sfx.click)} />
+        </Sequence>
+      ))}
+      <Sequence from={totalFrames - fps} durationInFrames={5}>
+        <Audio src={staticFile(theme.sfx.end)} />
+      </Sequence>
+
+      {timing.segments.map((seg) => {
+        const p = phaseByKey[seg.key];
+        return <Audio key={seg.key} src={staticFile(seg.audioPath.replace(/^remotion\//, ""))} startFrom={0} from={p.startFrame} />;
+      })}
+    </AbsoluteFill>
+  );
+}
