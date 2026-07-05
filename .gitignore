@@ -1,0 +1,9 @@
+.worktrees/
+node_modules/
+.DS_Store
+out/
+dist/
+*.mp4
+remotion/audio/*.mp3
+remotion/audio/*.json
+public/sfx/
