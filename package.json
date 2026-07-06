@@ -1,10 +1,11 @@
 {
-	"name": "board-review-clips",
+	"name": "vox-styled-reels",
 	"version": "0.1.0",
 	"private": true,
 	"type": "module",
 	"packageManager": "pnpm@10.13.1",
 	"scripts": {
+		"prepare": "git config core.hooksPath .githooks",
 		"audio": "tsx scripts/generate-audio.ts",
 		"validate": "tsx scripts/validate-cards.ts",
 		"render": "tsx scripts/render.ts",

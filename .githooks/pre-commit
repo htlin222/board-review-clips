@@ -1,0 +1,15 @@
+#!/bin/sh
+# Validate staged card JSONs before commit — same zod check as CI.
+# Enabled via `git config core.hooksPath .githooks` (run automatically by the
+# package.json "prepare" script on pnpm install).
+
+cards=$(git diff --cached --name-only --diff-filter=AM -- 'cards/*.json' | grep -v '^cards/_')
+[ -z "$cards" ] && exit 0
+
+echo "Validating staged cards..."
+# shellcheck disable=SC2086
+pnpm exec tsx scripts/validate-cards.ts $cards || {
+  echo ""
+  echo "Card validation failed — fix the JSON above (or commit with --no-verify to bypass)."
+  exit 1
+}

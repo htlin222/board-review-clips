@@ -1,13 +1,13 @@
 name: Validate cards
 
-# Lightweight PR gate: when a PR touches card JSONs, run the format check and
-# unit tests (no TTS, no rendering) so malformed cards are blocked before
-# merge — the full build/release runs post-merge in release-cards.yml.
+# Lightweight PR gate: format-check the cards and run unit tests (no TTS, no
+# rendering) so malformed cards and broken code are blocked before merge — the
+# full build/release runs post-merge in release-cards.yml. Runs on every PR
+# (not path-filtered) because "validate" is a required status check: a
+# path-filtered required check would leave non-card PRs stuck un-mergeable.
 
 on:
   pull_request:
-    paths:
-      - "cards/*.json"
 
 permissions:
   contents: read
