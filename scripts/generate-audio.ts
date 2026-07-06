@@ -17,6 +17,33 @@ function segmentsFor(card: Card): { key: string; text: string }[] {
   ];
 }
 
+// The Edge TTS endpoint occasionally returns an empty stream (more so from
+// datacenter IPs, i.e. CI). Two defenses: pre-create metadata.json so the
+// library's failure cleanup (unlinkSync) rejects instead of crashing the
+// process, and retry the segment with backoff before giving up.
+async function synthesizeWithRetry(dir: string, spokenText: string, attempts = 3): Promise<string> {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    writeFileSync(join(dir, "metadata.json"), "{}");
+    const tts = new MsEdgeTTS();
+    try {
+      await tts.setMetadata(theme.tts.voice, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3, {
+        wordBoundaryEnabled: true,
+        sentenceBoundaryEnabled: true,
+      });
+      const { metadataFilePath } = await tts.toFile(dir, spokenText, { rate: theme.tts.rate });
+      return metadataFilePath!;
+    } catch (e) {
+      lastError = e;
+      console.warn(`  TTS attempt ${attempt}/${attempts} failed: ${(e as Error).message}`);
+      if (attempt < attempts) await new Promise((r) => setTimeout(r, attempt * 3000));
+    } finally {
+      tts.close();
+    }
+  }
+  throw lastError;
+}
+
 async function synthesizeSegment(cardId: string, key: string, text: string): Promise<SegmentTiming> {
   const dir = join(AUDIO_DIR, cardId, key);
   const sourcePath = join(dir, "source.txt");
@@ -37,13 +64,7 @@ async function synthesizeSegment(cardId: string, key: string, text: string): Pro
   }
 
   mkdirSync(dir, { recursive: true });
-  const tts = new MsEdgeTTS();
-  await tts.setMetadata(theme.tts.voice, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3, {
-    wordBoundaryEnabled: true,
-    sentenceBoundaryEnabled: true,
-  });
-  const { metadataFilePath } = await tts.toFile(dir, spokenText, { rate: theme.tts.rate });
-  tts.close();
+  const metadataFilePath = await synthesizeWithRetry(dir, spokenText);
 
   writeFileSync(sourcePath, spokenText);
   const raw = JSON.parse(readFileSync(metadataFilePath!, "utf-8"));
