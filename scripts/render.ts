@@ -57,7 +57,8 @@ async function main() {
       console.log(`  done: ${outputLocation}`);
     }
 
-    execSync(`ffmpeg -y -i "${join(cardOut, "long.mp4")}" -vn -q:a 2 "${join(cardOut, "audio.mp3")}"`, {
+    // Remotion's bundled ffmpeg: no system ffmpeg needed (CI runners lack one).
+    execSync(`pnpm exec remotion ffmpeg -y -i "${join(cardOut, "long.mp4")}" -vn -q:a 2 "${join(cardOut, "audio.mp3")}"`, {
       stdio: "ignore",
     });
     console.log(`  done: ${join(cardOut, "audio.mp3")}`);
