@@ -11,7 +11,7 @@ import { Outro } from "../components/Outro";
 import { buildTimeline } from "../lib/useCardTimeline";
 import { currentPhaseIndex } from "../lib/progress";
 import { easeInCubic, easeOutCubic } from "../lib/easing";
-import { openingEffect } from "../lib/opening";
+import { closingEffect, openingEffect } from "../lib/opening";
 import { answerFontFor } from "../lib/answerFonts";
 import { fitFontSize } from "../lib/fitText";
 import type { CardTiming } from "../lib/types";
@@ -113,10 +113,13 @@ export function LongForm({
   });
 
   const open = openingEffect(frame, theme);
+  const close = closingEffect(frame, totalFrames, theme);
+  const viewScale = open.scale * close.scale;
+  const viewBlur = open.blurPx + close.blurPx;
 
   return (
     <AbsoluteFill style={{ background: theme.colors.bg }}>
-      <AbsoluteFill style={{ transform: `scale(${open.scale})`, filter: open.blurPx ? `blur(${open.blurPx}px)` : undefined }}>
+      <AbsoluteFill style={{ transform: `scale(${viewScale})`, filter: viewBlur ? `blur(${viewBlur}px)` : undefined }}>
         <GridBackground />
 
         <AbsoluteFill style={{ opacity: fadeOpacity }}>

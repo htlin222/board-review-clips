@@ -12,7 +12,7 @@ import { Outro } from "../components/Outro";
 import { buildTimeline } from "../lib/useCardTimeline";
 import { currentPhaseIndex } from "../lib/progress";
 import { easeInCubic, easeOutCubic } from "../lib/easing";
-import { openingEffect } from "../lib/opening";
+import { closingEffect, openingEffect } from "../lib/opening";
 import { answerFontFor } from "../lib/answerFonts";
 import { fitFontSize } from "../lib/fitText";
 import type { CardTiming } from "../lib/types";
@@ -30,6 +30,7 @@ const TITLE_TOP = SAFE_TOP + 40;
 const ANSWER_TOP = SAFE_TOP + 320; // yellow box band widened +40 up / +40 down
 const DETAIL_BAND_TOP = SAFE_TOP + 760;
 const PROGRESS_TOP = SAFE_BOTTOM + 20;
+const PROGRESS_OFFSET_X = 200; // nudge the dots right, clear of Shorts UI chrome
 const DETAIL_BAND_BOTTOM = PROGRESS_TOP - 120;
 
 // Adaptive text fitting. Title and answer live in fixed bands (so the yellow box
@@ -120,10 +121,13 @@ export function Shorts({
   });
 
   const open = openingEffect(frame, theme);
+  const close = closingEffect(frame, totalFrames, theme);
+  const viewScale = open.scale * close.scale;
+  const viewBlur = open.blurPx + close.blurPx;
 
   return (
     <AbsoluteFill style={{ background: theme.colors.bg }}>
-      <AbsoluteFill style={{ transform: `scale(${open.scale})`, filter: open.blurPx ? `blur(${open.blurPx}px)` : undefined }}>
+      <AbsoluteFill style={{ transform: `scale(${viewScale})`, filter: viewBlur ? `blur(${viewBlur}px)` : undefined }}>
         <GridBackground />
 
         <AbsoluteFill style={{ opacity: fadeOpacity }}>
@@ -211,7 +215,7 @@ export function Shorts({
               })}
           </div>
 
-          <div style={{ position: "absolute", top: PROGRESS_TOP, left: 0, width: 1080, display: "flex", justifyContent: "center" }}>
+          <div style={{ position: "absolute", top: PROGRESS_TOP, left: PROGRESS_OFFSET_X, width: 1080, display: "flex", justifyContent: "center" }}>
             <ProgressBar current={progressIndex} total={timing.segments.length} frame={frame} currentPhaseStart={progressPhaseStart} />
           </div>
 
