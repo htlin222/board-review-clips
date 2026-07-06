@@ -3,6 +3,8 @@ import { AbsoluteFill, Html5Audio as Audio, Sequence, interpolate, staticFile, u
 import { theme } from "../theme";
 import { Header } from "../components/Header";
 import { GridBackground } from "../components/GridBackground";
+import { PaperTexture } from "../components/PaperTexture";
+import { Vignette } from "../components/Vignette";
 import { GrainOverlay } from "../components/GrainOverlay";
 import { ProgressBar } from "../components/ProgressBar";
 import { KaraokeText } from "../components/KaraokeText";
@@ -114,13 +116,16 @@ export function LongForm({
 
   const open = openingEffect(frame, theme);
   const close = closingEffect(frame, totalFrames, theme);
-  const viewScale = open.scale * close.scale;
+  // Imperceptible push-in across the whole video so the frame never sits still.
+  const drift = interpolate(frame, [0, totalFrames], [1, theme.camera.pushInScale]);
+  const viewScale = open.scale * close.scale * drift;
   const viewBlur = open.blurPx + close.blurPx;
 
   return (
     <AbsoluteFill style={{ background: theme.colors.bg }}>
       <AbsoluteFill style={{ transform: `scale(${viewScale})`, filter: viewBlur ? `blur(${viewBlur}px)` : undefined }}>
         <GridBackground />
+        <PaperTexture />
 
         <AbsoluteFill style={{ opacity: fadeOpacity }}>
           <Header main={main} section={section} topic={topic} author={author} position="top" />
@@ -141,7 +146,7 @@ export function LongForm({
           {titleDone && (
             <Sequence from={answerPhase.startFrame} layout="none">
               <div style={{ position: "absolute", top: ANSWER_TOP, left: CONTENT_LEFT, width: CONTENT_WIDTH }}>
-                <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", background: theme.colors.answerBg, borderRadius: 12, padding: `${ANSWER_PAD_V}px ${ANSWER_PAD_H}px`, overflow: "hidden" }}>
+                <div style={{ position: "relative", display: "inline-block", maxWidth: "100%", background: theme.colors.answerBg, borderRadius: 12, padding: `${ANSWER_PAD_V}px ${ANSWER_PAD_H}px`, overflow: "hidden", boxShadow: theme.answerShadow }}>
                   <GrainOverlay frame={frame} id="grain-answer-lf" opacity={0.35} radius={12} />
                   <KaraokeText
                     words={byKey["answer"].words}
@@ -233,6 +238,8 @@ export function LongForm({
         <GrainOverlay frame={frame} />
 
         <Outro author={author} startFrame={outroStart + contentFadeFrames} totalFrames={totalFrames} fontSize={theme.outro.longformSize} />
+
+        <Vignette />
       </AbsoluteFill>
     </AbsoluteFill>
   );

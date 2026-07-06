@@ -34,6 +34,15 @@ export const theme = {
   },
   transition: { scrollFrames: 8, scrollDistance: 60 },
   opening: { settleFrames: 12, startScale: 1.05, maxBlur: 12 },
+  // Gentle Vox-style flavor: an imperceptible whole-video push-in, a soft edge
+  // vignette, a paper-cutout shadow under the answer box, and a paper texture
+  // base beneath the grid. All tuned to stay under the threshold of notice.
+  camera: { pushInScale: 1.015 },
+  vignette: { opacity: 0.18 },
+  // Print-misregistration shadow: brand red offset one way, brand blue the
+  // other, like a silkscreen pass that missed registration.
+  answerShadow: "8px 8px 0 rgba(200,48,42,0.4), -8px -8px 0 rgba(30,56,120,0.3)",
+  paper: { opacity: 0.06, seed: 7 },
   scramble: { durationFrames: 14, charset: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#%&@" },
   tts: { voice: "en-US-AvaNeural", rate: "+0%" },
   sfx: { begin: "sfx/Tink.m4a", click: "sfx/Pop.m4a" },
