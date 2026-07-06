@@ -25,8 +25,8 @@ const DETAIL_INDENT = 40;
 // Fixed y-anchors so the yellow answer box never shifts when a detail line's
 // height changes. The detail lives in its own band and centers within it.
 const TITLE_TOP = SAFE_TOP + 40;
-const ANSWER_TOP = SAFE_TOP + 360;
-const DETAIL_BAND_TOP = SAFE_TOP + 720;
+const ANSWER_TOP = SAFE_TOP + 320; // yellow box band widened +40 up / +40 down
+const DETAIL_BAND_TOP = SAFE_TOP + 760;
 const PROGRESS_TOP = SAFE_BOTTOM + 20;
 const DETAIL_BAND_BOTTOM = PROGRESS_TOP - 120;
 
