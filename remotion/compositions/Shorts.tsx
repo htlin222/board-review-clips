@@ -7,6 +7,8 @@ import { GrainOverlay } from "../components/GrainOverlay";
 import { ProgressBar } from "../components/ProgressBar";
 import { KaraokeText } from "../components/KaraokeText";
 import { RollingCaption } from "../components/RollingCaption";
+import { BackgroundMusic } from "../components/BackgroundMusic";
+import { Outro } from "../components/Outro";
 import { buildTimeline } from "../lib/useCardTimeline";
 import { currentPhaseIndex } from "../lib/progress";
 import { easeInCubic, easeOutCubic } from "../lib/easing";
@@ -107,7 +109,12 @@ export function Shorts({
   const detailsRevealed = detailPhases.filter((p) => p.startFrame <= frame).length;
   const answerFont = answerFontFor(detailsRevealed);
 
-  const fadeOpacity = interpolate(frame, [totalFrames - theme.timing.endFadeFrames, totalFrames], [1, 0], {
+  // The main card fades out into the end card once the narration ends and the
+  // music swells; the Outro then owns the music tail.
+  const narrationEndFrame = phases[phases.length - 1]?.endFrame ?? 0;
+  const outroStart = narrationEndFrame + Math.round((theme.outro.startAfterNarrationMs / 1000) * fps);
+  const contentFadeFrames = Math.round((theme.outro.contentFadeMs / 1000) * fps);
+  const fadeOpacity = interpolate(frame, [outroStart, outroStart + contentFadeFrames], [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -208,6 +215,8 @@ export function Shorts({
             <ProgressBar current={progressIndex} total={timing.segments.length} frame={frame} currentPhaseStart={progressPhaseStart} />
           </div>
 
+          <BackgroundMusic narrationEndFrame={phases[phases.length - 1]?.endFrame ?? 0} totalFrames={totalFrames} />
+
           <Audio src={staticFile(theme.sfx.begin)} />
           {titleDone && (
             <Sequence from={titlePhase.endFrame} durationInFrames={5}>
@@ -231,6 +240,8 @@ export function Shorts({
         </AbsoluteFill>
 
         <GrainOverlay frame={frame} />
+
+        <Outro author={author} startFrame={outroStart + contentFadeFrames} totalFrames={totalFrames} fontSize={theme.outro.shortsSize} />
       </AbsoluteFill>
     </AbsoluteFill>
   );

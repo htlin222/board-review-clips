@@ -14,7 +14,9 @@ export function buildTimeline(timing: CardTiming): { phases: PhaseFrame[]; total
     cursor += durationFrames + gapFrames;
   }
 
-  const endHoldFrames = Math.round(1.5 * theme.fps);
+  // Hold on the last frame, then keep rolling for the music tail so the score can
+  // swell and fade out after the narration ends.
+  const endHoldFrames = Math.round(((theme.timing.endHoldMs + theme.timing.musicTailMs) / 1000) * theme.fps);
   const totalFrames = phases.length > 0 ? phases[phases.length - 1].endFrame + endHoldFrames : endHoldFrames;
   return { phases, totalFrames };
 }

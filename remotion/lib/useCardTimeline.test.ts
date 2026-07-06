@@ -43,14 +43,15 @@ describe("buildTimeline", () => {
 
   it("totalFrames covers the last phase plus the end hold, with no extra trailing gap", () => {
     const { phases, totalFrames } = buildTimeline(makeTiming([1000, 1000]));
-    const endHoldFrames = Math.round(1.5 * theme.fps);
+    const endHoldFrames = Math.round(((theme.timing.endHoldMs + theme.timing.musicTailMs) / 1000) * theme.fps);
     const lastPhase = phases[phases.length - 1];
     expect(totalFrames).toBe(lastPhase.endFrame + endHoldFrames);
   });
 
   it("returns no phases and just the end hold for a card with no segments", () => {
     const { phases, totalFrames } = buildTimeline(makeTiming([]));
+    const endHoldFrames = Math.round(((theme.timing.endHoldMs + theme.timing.musicTailMs) / 1000) * theme.fps);
     expect(phases).toEqual([]);
-    expect(totalFrames).toBe(Math.round(1.5 * theme.fps));
+    expect(totalFrames).toBe(endHoldFrames);
   });
 });

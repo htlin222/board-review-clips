@@ -14,7 +14,13 @@ export const theme = {
   },
   layout: { headerMargin: 56 },
   grain: { opacity: 0.06 },
-  timing: { revealDurationMs: 400, detailGapMs: 300, endFadeFrames: 30 },
+  timing: { revealDurationMs: 400, detailGapMs: 300, endFadeFrames: 30, endHoldMs: 1500, musicTailMs: 2500 },
+  // Background music bed. Quiet under the narration, swells once the voice-over
+  // ends, then fades to silence across the music tail. src is served from public/.
+  music: { src: "bg_music.mp3", low: 0.12, high: 0.34, fadeInMs: 500, swellMs: 500 },
+  // End card shown over the music tail: the author name scrambles in, centered,
+  // in a heavy slab serif with extra grain (Vox-logo feel).
+  outro: { startAfterNarrationMs: 1000, contentFadeMs: 400, inMs: 500, shortsSize: 130, longformSize: 190, grainOpacity: 0.14 },
   marker: { boilFps: 10, strokeWidth: 7, segments: 9, wobblePx: 2.4, sagPx: 3, overshootPct: 3, drawMs: 280 },
   boil: { boilFps: 10, jitterPx: 1.4 },
   grid: { size: 40, color: "rgba(17,17,17,0.08)", dotColor: "rgba(17,17,17,0.16)", dotMinRadius: 1, dotMaxRadius: 3.2, dotChance: 0.45 },
