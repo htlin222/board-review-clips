@@ -85,9 +85,9 @@ async function main() {
     await processCard(join(CARDS_DIR, file));
   }
 
-  // Rebuild public/audio from scratch so renamed/removed cards don't leave stale served files behind.
-  rmSync("public/audio", { recursive: true, force: true });
-  cpSync(AUDIO_DIR, "public/audio", { recursive: true });
+  // Rebuild assets/audio from scratch so renamed/removed cards don't leave stale served files behind.
+  rmSync("assets/audio", { recursive: true, force: true });
+  cpSync(AUDIO_DIR, "assets/audio", { recursive: true });
 }
 
 main().catch((e) => {

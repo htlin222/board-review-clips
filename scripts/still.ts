@@ -8,7 +8,7 @@ const frame = Number(frameArg);
 const outputLocation = outArg ?? join("out", `still-${compositionId}-${frame}.png`);
 
 async function main() {
-  const bundleLocation = await bundle({ entryPoint: join("remotion", "index.ts") });
+  const bundleLocation = await bundle({ entryPoint: join("remotion", "index.ts"), publicDir: "assets" });
   const { topic, author, main: mainField, section } = JSON.parse(readFileSync(join("cards", `${cardId}.json`), "utf-8"));
 
   const composition = await selectComposition({

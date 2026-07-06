@@ -7,9 +7,6 @@ dist/
 remotion/audio/**/*.mp3
 remotion/audio/**/*.json
 remotion/audio/**/*.txt
-public/sfx/
-public/audio/
 
-# user-provided background music (kept out of git like sfx/audio)
-public/bg_music.mp3
-assets/bg_music.mp3
+# generated TTS audio copied into the served assets dir (assets/sfx stays tracked)
+assets/audio/

@@ -17,7 +17,7 @@ export const theme = {
   timing: { revealDurationMs: 400, detailGapMs: 300, endFadeFrames: 30, endHoldMs: 1500, musicTailMs: 2500 },
   // Background music bed. Quiet under the narration, swells once the voice-over
   // ends, then fades to silence across the music tail. src is served from public/.
-  music: { src: "bg_music.mp3", low: 0.05, high: 0.28, fadeInMs: 500, swellMs: 500 },
+  music: { src: "sfx/bg_music.mp3", low: 0.05, high: 0.28, fadeInMs: 500, swellMs: 500 },
   // End card shown over the music tail: the author name scrambles in, centered,
   // in a heavy slab serif with extra grain (Vox-logo feel).
   outro: { startAfterNarrationMs: 1000, contentFadeMs: 400, inMs: 500, shortsSize: 130, longformSize: 190, grainOpacity: 0.14 },
