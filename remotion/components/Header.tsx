@@ -46,8 +46,8 @@ export function Header({
         fontFamily,
         fontStyle: "italic",
         fontSize: theme.fonts.headerSize,
-        color: theme.colors.ink,
-        opacity: 0.6,
+        color: theme.colors.header,
+        opacity: 0.85,
       }}
     >
       <span style={{ clipPath: `inset(0 ${(1 - revealT) * 100}% 0 0)` }}>{breadcrumb}</span>

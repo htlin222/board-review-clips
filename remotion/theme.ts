@@ -1,5 +1,7 @@
 export const theme = {
-  colors: { bg: "#EAE6DE", ink: "#111111", marker: "#E23B2E", answerBg: "#FFDD57" },
+  // Bauhaus primary triad (Itten) + neutral: red #C8302A, yellow #E8C018,
+  // blue #1E3878, off-white #F5F2E8.
+  colors: { bg: "#F5F2E8", ink: "#111111", marker: "#C8302A", answerBg: "#E8C018", header: "#1E3878" },
   fonts: {
     family: "Noto Sans, sans-serif",
     titleSize: 72,
