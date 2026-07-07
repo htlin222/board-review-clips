@@ -102,6 +102,15 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Remotion downloads Chrome Headless Shell (~150MB) into
+      # node_modules/.remotion on first render; cache it across runs.
+      # Restored after pnpm install so the install can't clobber it.
+      - name: Cache Remotion browser
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.remotion
+          key: remotion-browser-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
       - name: Generate TTS audio
         run: pnpm audio ${{ matrix.card }}
 

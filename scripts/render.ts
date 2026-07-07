@@ -52,6 +52,9 @@ async function main() {
         codec: "h264",
         outputLocation,
         inputProps: { cardId: cardIdJson, topic, author },
+        // Default concurrency is half the cores; the frames here are heavy
+        // (SVG turbulence + blur), so use every core — big win on 4-core CI.
+        concurrency: "100%",
       });
 
       console.log(`  done: ${outputLocation}`);
