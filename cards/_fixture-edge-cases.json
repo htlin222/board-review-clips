@@ -6,5 +6,6 @@
   "author": "",
   "title": "Edge case card with one detail paragraph",
   "answer": "Short answer.",
-  "detail": ["Just one detail paragraph to confirm a single-segment card still renders end-to-end, including special characters like alpha (α) and a footnote marker¹."]
+  "detail": ["Just one detail paragraph to confirm a single-segment card still renders end-to-end, including special characters like alpha (α) and a footnote marker¹."],
+  "releaseNote": "Test fixture exercising single-detail rendering and special characters; not a real release."
 }

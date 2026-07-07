@@ -124,9 +124,13 @@ jobs:
           id="${{ matrix.card }}"
           tag="card-$id"
           title=$(node -p "require('./cards/$id.json').title")
-          if ! gh release view "$tag" >/dev/null 2>&1; then
-            gh release create "$tag" --title "$title" \
-              --notes "Automated build of card \`$id\` from $GITHUB_SHA."
+          # Release body = the card's releaseNote, with a build footer.
+          node -p "require('./cards/$id.json').releaseNote" > notes.md
+          printf '\n\n---\n_Automated build of card `%s` from %s._\n' "$id" "$GITHUB_SHA" >> notes.md
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release edit "$tag" --title "$title" --notes-file notes.md
+          else
+            gh release create "$tag" --title "$title" --notes-file notes.md
           fi
           gh release upload "$tag" --clobber \
             "out/$id/long.mp4" "out/$id/short.mp4" "out/$id/audio.mp3" "out/$id/config.json"

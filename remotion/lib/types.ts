@@ -7,6 +7,7 @@ export type Card = {
   title: string;
   answer: string;
   detail: string[];
+  releaseNote: string;
 };
 
 export type WordTiming = {

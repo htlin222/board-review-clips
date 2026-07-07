@@ -16,6 +16,7 @@ export const cardSchema = z
     title: nonEmpty,
     answer: nonEmpty,
     detail: z.array(nonEmpty).min(1),
+    releaseNote: nonEmpty,
   })
   .strict();
 
