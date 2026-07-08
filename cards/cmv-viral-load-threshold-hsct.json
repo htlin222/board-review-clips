@@ -1,0 +1,14 @@
+{
+  "id": "cmv-viral-load-threshold-hsct",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "HSCT",
+  "author": "Dr. Lizard",
+  "title": "what cmv viral load threshold should trigger preemptive therapy after hsct?",
+  "answer": "no universal threshold exists; most centers use 100-1000 iu/ml in plasma based on patient risk.",
+  "detail": [
+    "ecil guidelines recommend 2-3 log10 iu/ml as common thresholds.",
+    "high-risk patients may warrant treatment at 100 iu/ml."
+  ],
+  "releaseNote": "the optimal cmv viral load threshold for preemptive therapy after hsct is not universally agreed upon, with most centers using 100-1000 iu/ml in plasma based on patient risk."
+}
