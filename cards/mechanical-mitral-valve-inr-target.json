@@ -1,0 +1,14 @@
+{
+  "id": "mechanical-mitral-valve-inr-target",
+  "main": "Board Review",
+  "section": "Cardiology",
+  "topic": "Mechanical Mitral Valve",
+  "author": "Dr. Lizard",
+  "title": "What is the target INR range for a mechanical mitral valve?",
+  "answer": "3.0 (range 2.5 to 3.5)",
+  "detail": [
+    "Mechanical mitral valves are more thrombogenic than aortic ones.",
+    "Low-dose aspirin is often added to warfarin unless there is a bleeding contraindication."
+  ],
+  "releaseNote": "For patients with a mechanical mitral valve prosthesis, a target INR of 3.0 (range 2.5 to 3.5) is recommended with warfarin."
+}
