@@ -128,6 +128,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
           PR_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
+          # Built-in token for issue comments — the PAT may lack Issues:Write.
+          BOT_TOKEN: ${{ github.token }}
           NUMBER: ${{ steps.issue.outputs.number }}
           TITLE: ${{ steps.issue.outputs.title }}
           FILES: ${{ steps.gen.outputs.files }}
@@ -156,4 +158,4 @@ jobs:
           # Queue auto-merge: GitHub merges the moment required checks (validate)
           # pass, and never if they fail. Fully hands-off from here.
           gh pr merge "$branch" --auto --squash --delete-branch
-          gh issue comment "$NUMBER" --body "Opened PR from \`$branch\` with $COUNT generated card(s). Auto-merges when \`validate\` passes → video build."
+          GH_TOKEN="$BOT_TOKEN" gh issue comment "$NUMBER" --body "Opened PR from \`$branch\` with $COUNT generated card(s). Auto-merges when \`validate\` passes → video build."
