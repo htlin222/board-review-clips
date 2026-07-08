@@ -119,9 +119,15 @@ jobs:
       - name: Validate generated cards
         run: pnpm validate ${{ steps.gen.outputs.files }}
 
+      # Open the PR with a PAT (CARD_PR_TOKEN) when available so the resulting
+      # `pull_request` event actually triggers the required `validate` check.
+      # PRs opened with the built-in GITHUB_TOKEN never trigger workflows, so
+      # without a PAT the check stays stuck in action_required. Falls back to
+      # github.token (PR still opens, but validate needs a manual nudge).
       - name: Open pull request
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
+          PR_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
           NUMBER: ${{ steps.issue.outputs.number }}
           TITLE: ${{ steps.issue.outputs.title }}
           FILES: ${{ steps.gen.outputs.files }}
@@ -131,6 +137,9 @@ jobs:
           branch="card/issue-$NUMBER"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          # Push over HTTPS with the (possibly PAT) token so the branch push and
+          # PR creation share the same identity.
+          git remote set-url origin "https://x-access-token:${PR_TOKEN}@github.com/${{ github.repository }}.git"
           git checkout -b "$branch"
           git add $FILES
           git commit -m "cards: add $COUNT card(s) from issue #$NUMBER"
