@@ -115,10 +115,17 @@ jobs:
           NUMBER: ${{ steps.issue.outputs.number }}
         run: pnpm issue-progress "$NUMBER" generate
 
-      - name: Generate cards with Groq
+      # Generate the card. Provider is chosen by env: if the Cloudflare Worker
+      # secrets are set (LLM_WORKER_URL + LLM_WORKER_TOKEN), use that (dodges
+      # Groq's free-tier token caps); otherwise fall back to Groq. issue-to-cards
+      # reads LLM_BASE_URL / LLM_API_KEY / LLM_MODEL, defaulting to Groq.
+      - name: Generate card
         id: gen
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          LLM_BASE_URL: ${{ secrets.LLM_WORKER_URL }}
+          LLM_API_KEY: ${{ secrets.LLM_WORKER_TOKEN }}
+          LLM_MODEL: ${{ vars.LLM_MODEL }}
           ISSUE_TITLE: ${{ steps.issue.outputs.title }}
         run: |
           export ISSUE_BODY="$(jq -r '.body' issue.json)"

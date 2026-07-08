@@ -35,6 +35,14 @@ Verify visual changes with `pnpm still` at a few key frames (renders are the rea
 - Generated audio (`remotion/audio/**`, `assets/audio/`) and `out/` are gitignored; `assets/sfx/` (music + sfx) is tracked.
 - deterministic randomness only: use `remotion`'s `random(seed)`, never `Math.random()`.
 
+## LLM card generation
+
+`scripts/issue-to-cards.ts` turns a GitHub issue into card JSON via any **OpenAI-compatible** chat endpoint. Provider is env-driven: `LLM_BASE_URL` / `LLM_API_KEY` / `LLM_MODEL` (legacy `GROQ_API_KEY` / `GROQ_MODEL` still honored). Defaults to Groq `llama-3.1-8b-instant`. `parseJsonLoose` tolerates ```json fences / prose, so non-strict backends work. `max_tokens` is capped at 2000 (one card) to stay under free-tier per-minute token caps.
+
+**Cloudflare Workers AI** (`worker/`) is an OpenAI-shim over the account's AI binding, to dodge Groq's free-tier token/day limits. Deploy with `pnpm worker:deploy`, set its shared secret with `pnpm worker:secret` (Worker env `AUTH_TOKEN`). CI uses it automatically when repo secrets `LLM_WORKER_URL` + `LLM_WORKER_TOKEN` (and var `LLM_MODEL`, a `@cf/...` id) are set; otherwise falls back to Groq. Model id must be a current `@cf/...` (they get deprecated — check `wrangler ai models`).
+
 ## CI
 
 `.github/workflows/release-cards.yml`: card JSON changes on `main` → validate → test → build changed cards only → per-card GitHub Release (tag `card-<id>`, assets clobbered on re-push). `workflow_dispatch` accepts card ids (empty = all).
+
+`.github/workflows/issue-to-card.yml`: `card`-labelled issue (author htlin222) → generate card → PR → auto-merge on `validate`. A single live progress comment (`scripts/issue-progress.ts`) ticks generate→pr→merge→audio→render→release across both workflows (✅/💪/⏳, then 🎉 + release link + elapsed), and the issue auto-closes on release success.

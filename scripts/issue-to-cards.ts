@@ -25,11 +25,15 @@ const CARDS_DIR = "cards";
 // Site-wide persona/collection come from config.toml so they live in one place.
 // Forced after parsing so the LLM can't override the author.
 const { author: CARD_AUTHOR, main: CARD_MAIN } = loadSiteConfig();
-const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-// One-card JSON extraction is easy, so default to the small, fast model — it
-// has a much higher free-tier tokens-per-minute budget than 70b, which is what
-// trips the rate limit. Override with GROQ_MODEL for anything heavier.
-const MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
+// Provider-agnostic LLM config. Any OpenAI-compatible chat-completions endpoint
+// works — Groq (default), a Cloudflare Worker AI proxy (see worker/), etc. — by
+// setting LLM_BASE_URL / LLM_API_KEY / LLM_MODEL. Groq env vars stay as
+// fallbacks so existing setups keep working unchanged.
+const LLM_BASE_URL = (process.env.LLM_BASE_URL || "https://api.groq.com/openai/v1").replace(/\/$/, "");
+const LLM_API_KEY = process.env.LLM_API_KEY || process.env.GROQ_API_KEY;
+// One-card JSON extraction is easy, so default to a small, fast model. Override
+// with LLM_MODEL (or legacy GROQ_MODEL) for anything heavier.
+const LLM_MODEL = process.env.LLM_MODEL || process.env.GROQ_MODEL || "llama-3.1-8b-instant";
 
 function slugify(input: string): string {
   return input
@@ -135,20 +139,34 @@ ${body}`;
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-async function callGroq(prompt: string, attempts = 4): Promise<unknown> {
-  const apiKey = process.env.GROQ_API_KEY;
-  if (!apiKey) throw new Error("GROQ_API_KEY is not set");
+// Providers that lack a strict JSON mode (e.g. Cloudflare Workers AI) wrap the
+// object in ```json fences or add stray prose. Strip fences, then fall back to
+// the outermost {...} / [...] span, so any OpenAI-compatible backend works.
+export function parseJsonLoose(raw: string): unknown {
+  const unfenced = raw.replace(/```(?:json)?/gi, "").trim();
+  try {
+    return JSON.parse(unfenced);
+  } catch {
+    const start = unfenced.search(/[[{]/);
+    const end = Math.max(unfenced.lastIndexOf("}"), unfenced.lastIndexOf("]"));
+    if (start !== -1 && end > start) return JSON.parse(unfenced.slice(start, end + 1));
+    throw new Error(`Could not parse JSON from LLM output:\n${raw.slice(0, 300)}`);
+  }
+}
+
+async function callLLM(prompt: string, attempts = 4): Promise<unknown> {
+  if (!LLM_API_KEY) throw new Error("LLM_API_KEY (or GROQ_API_KEY) is not set");
 
   let lastError: unknown;
   for (let attempt = 1; attempt <= attempts; attempt++) {
-    const res = await fetch(GROQ_URL, {
+    const res = await fetch(`${LLM_BASE_URL}/chat/completions`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${LLM_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: MODEL,
+        model: LLM_MODEL,
         temperature: 0.2,
         // Reserve just enough for one card's JSON. Groq counts prompt +
         // max_tokens against the per-minute budget (6k TPM on 8b-instant), and
@@ -171,12 +189,12 @@ async function callGroq(prompt: string, attempts = 4): Promise<unknown> {
         choices?: { message?: { content?: string } }[];
       };
       const content = data.choices?.[0]?.message?.content;
-      if (!content) throw new Error("Groq returned no content");
-      return JSON.parse(content);
+      if (!content) throw new Error("LLM returned no content");
+      return parseJsonLoose(content);
     }
 
     const text = await res.text();
-    lastError = new Error(`Groq request failed: ${res.status} ${res.statusText}\n${text}`);
+    lastError = new Error(`LLM request failed: ${res.status} ${res.statusText}\n${text}`);
 
     // Rate-limited: honour the suggested retry delay ("try again in 5.14s").
     if (res.status === 429 && attempt < attempts) {
@@ -238,7 +256,7 @@ async function main() {
 
   const candidates: unknown[] = [];
   for (let b = 0; b < batches.length; b++) {
-    const raw = await callGroq(buildPrompt(title, batches[b]));
+    const raw = await callLLM(buildPrompt(title, batches[b]));
     const cards = extractCards(raw);
     console.log(`  batch ${b + 1}/${batches.length}: ${cards.length} card(s)`);
     candidates.push(...cards);
@@ -286,7 +304,11 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.error(e instanceof Error ? e.message : e);
-  process.exit(1);
-});
+// Only run when invoked directly (pnpm issue-to-cards), not when imported
+// (e.g. by unit tests reusing parseJsonLoose).
+if (import.meta.url === `file://${process.argv[1]}`) {
+  main().catch((e) => {
+    console.error(e instanceof Error ? e.message : e);
+    process.exit(1);
+  });
+}

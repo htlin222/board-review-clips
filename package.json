@@ -14,6 +14,10 @@
 		"render": "pnpm sync-config && tsx scripts/render.ts",
 		"still": "pnpm sync-config && tsx scripts/still.ts",
 		"studio": "pnpm sync-config && remotion studio remotion/index.ts",
+		"worker:deploy": "wrangler deploy --config worker/wrangler.toml",
+		"worker:secret": "wrangler secret put AUTH_TOKEN --config worker/wrangler.toml",
+		"worker:dev": "wrangler dev --config worker/wrangler.toml",
+		"worker:tail": "wrangler tail --config worker/wrangler.toml",
 		"test": "vitest run"
 	},
 	"dependencies": {

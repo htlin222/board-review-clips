@@ -1,0 +1,16 @@
+# Cloudflare Worker that fronts Workers AI with an OpenAI-compatible
+# /chat/completions endpoint, so scripts/issue-to-cards.ts can talk to it by
+# just setting LLM_BASE_URL to this Worker's URL (no code change). Deploy with
+# `pnpm worker:deploy`; set the shared secret with `pnpm worker:secret`.
+name = "vox-card-llm"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+account_id = "3a77813251d473c40d8873a59f6c0e80"
+
+# Binds the account's Workers AI to `env.AI` — auth is handled by the binding,
+# no API token to manage. Billed in Neurons (generous daily free allowance).
+[ai]
+binding = "AI"
+
+[observability]
+enabled = true

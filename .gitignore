@@ -14,3 +14,7 @@ assets/audio/
 # locally-installed mcq Claude Code skill (bundles a personal .env key)
 .claude/skills/mcq/
 mcq.skill
+
+# wrangler / cloudflare worker build artifacts
+.wrangler/
+worker/.wrangler/
