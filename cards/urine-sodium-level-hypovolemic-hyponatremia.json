@@ -1,0 +1,16 @@
+{
+  "id": "urine-sodium-level-hypovolemic-hyponatremia",
+  "main": "Board Review",
+  "section": "Nephrology",
+  "topic": "Hypovolemic Hyponatremia",
+  "author": "Dr. Lizard",
+  "title": "What urine sodium level distinguishes renal from extrarenal losses in hypovolemic hyponatremia?",
+  "answer": "Urine sodium above 30 mEq/L suggests renal losses; below 30 mEq/L suggests extrarenal losses.",
+  "detail": [
+    "Renal losses include **diuretics**, **salt-wasting nephropathy**, **cerebral salt wasting**, and **glucosuria** from uncontrolled **diabetes**.",
+    "Extrarenal losses include **diarrhea**, **vomiting**, **hemorrhage**, **burns**, and **third-spacing** from **pancreatitis** or **peritonitis**.",
+    "Urine indices help differentiate causes when clinical volume assessment is uncertain or equivocal.",
+    "Infusing 1-2 L saline and assessing urine flow can help confirm hypovolemic hyponatremia diagnosis."
+  ],
+  "releaseNote": "The urine sodium level can help distinguish between renal and extrarenal losses in hypovolemic hyponatremia, with levels above 30 mEq/L suggesting renal losses and below 30 mEq/L suggesting extrarenal losses."
+}
