@@ -144,7 +144,7 @@ jobs:
           git add $FILES
           git commit -m "cards: add $COUNT card(s) from issue #$NUMBER"
           git push -f origin "$branch"
-          body=$(printf 'Generated %s card(s) from #%s via Groq.\n\n**Review the JSON, edit as needed, then merge** — merging to `main` triggers the video build (release-cards.yml).\n\nFiles:\n' "$COUNT" "$NUMBER")
+          body=$(printf 'Generated %s card(s) from #%s via Groq.\n\nAuto-merges once `validate` passes, then release-cards.yml builds the video. Push a change to this branch to hold it for manual review.\n\nFiles:\n' "$COUNT" "$NUMBER")
           for f in $FILES; do body="$body"$'\n'"- \`$f\`"; done
           if gh pr view "$branch" >/dev/null 2>&1; then
             gh pr edit "$branch" --title "Cards from issue #$NUMBER: $TITLE" --body "$body"
@@ -153,4 +153,7 @@ jobs:
               --title "Cards from issue #$NUMBER: $TITLE" \
               --body "$body"
           fi
-          gh issue comment "$NUMBER" --body "Opened a PR from branch \`$branch\` with $COUNT generated card(s). Review and merge to build the videos."
+          # Queue auto-merge: GitHub merges the moment required checks (validate)
+          # pass, and never if they fail. Fully hands-off from here.
+          gh pr merge "$branch" --auto --squash --delete-branch
+          gh issue comment "$NUMBER" --body "Opened PR from \`$branch\` with $COUNT generated card(s). Auto-merges when \`validate\` passes → video build."
