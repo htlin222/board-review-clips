@@ -23,6 +23,8 @@ on:
 
 permissions:
   contents: write
+  # Close the originating issue and comment the release link once built.
+  issues: write
 
 jobs:
   detect:
@@ -91,6 +93,9 @@ jobs:
     name: build (${{ matrix.card }})
     steps:
       - uses: actions/checkout@v5
+        with:
+          # Full history so we can trace the card file back to its issue.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v6
 
@@ -134,3 +139,14 @@ jobs:
           fi
           gh release upload "$tag" --clobber \
             "out/$id/long.mp4" "out/$id/short.mp4" "out/$id/audio.mp3" "out/$id/config.json"
+
+          # If this card came from an issue (the add-commit records "from issue
+          # #N"), comment the release link and close it. No-op for cards added
+          # by hand or rebuilt via workflow_dispatch.
+          add_msg=$(git log --diff-filter=A --format=%s -- "cards/$id.json" | grep -i 'issue #' | head -1 || true)
+          issue=$(printf '%s' "$add_msg" | grep -oE '#[0-9]+' | head -1 | tr -d '#' || true)
+          if [ -n "$issue" ]; then
+            url=$(gh release view "$tag" --json url -q .url)
+            gh issue comment "$issue" --body "🎬 Video built and released: $url" || true
+            gh issue close "$issue" --reason completed || true
+          fi
