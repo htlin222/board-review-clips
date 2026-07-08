@@ -11,13 +11,21 @@ name: Issue to card
 # an issue number.
 
 on:
+  # `labeled` only — opening an issue *with* the label fires both `opened` and
+  # `labeled`, which would double-run and race on the same branch/PR. A
+  # `labeled` event covers both "opened with label" and "label added later".
   issues:
-    types: [opened, labeled]
+    types: [labeled]
   workflow_dispatch:
     inputs:
       issue_number:
         description: "Issue number to convert"
         required: true
+
+# Belt-and-suspenders against overlapping runs for the same issue.
+concurrency:
+  group: issue-to-card-${{ github.event.issue.number || github.event.inputs.issue_number }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
