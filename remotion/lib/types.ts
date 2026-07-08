@@ -1,9 +1,9 @@
 export type Card = {
   id: string;
-  main: string;
+  main?: string;
   section: string;
   topic: string;
-  author: string;
+  author?: string;
   title: string;
   answer: string;
   detail: string[];
@@ -27,7 +27,6 @@ export type SegmentTiming = {
 
 export type CardTiming = {
   cardId: string;
-  main: string;
   section: string;
   topic: string;
   author: string;

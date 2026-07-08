@@ -47,14 +47,12 @@ const ANSWER_BUDGET_H = DETAIL_BAND_TOP - ANSWER_TOP - GAP_ANSWER_DETAIL - ANSWE
 
 export function LongForm({
   timing,
-  main,
   section,
   topic,
   author,
 }: {
   cardId: string;
   timing: CardTiming;
-  main: string;
   section: string;
   topic: string;
   author: string;
@@ -168,7 +166,7 @@ export function LongForm({
         <PaperTexture />
 
         <AbsoluteFill style={{ opacity: fadeOpacity }}>
-          <Header main={main} section={section} topic={topic} author={author} position="top" />
+          <Header section={section} topic={topic} author={author} position="top" />
 
           <Sequence from={0} layout="none">
             <div style={{ position: "absolute", top: titleTop, left: CONTENT_LEFT, width: CONTENT_WIDTH }}>

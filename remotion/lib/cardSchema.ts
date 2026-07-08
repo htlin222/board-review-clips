@@ -9,10 +9,12 @@ const nonEmpty = z.string().trim().min(1);
 export const cardSchema = z
   .object({
     id: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, "id must be kebab-case (lowercase letters, digits, hyphens)"),
-    main: nonEmpty,
+    // author/main are site-wide defaults from config.toml; a card may omit them
+    // (inherit the config) or override them here.
+    main: nonEmpty.optional(),
     section: nonEmpty,
     topic: nonEmpty,
-    author: nonEmpty,
+    author: nonEmpty.optional(),
     title: nonEmpty,
     answer: nonEmpty,
     detail: z.array(nonEmpty).min(1),

@@ -1,0 +1,83 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Central customization file. Edit here, then run `pnpm sync-config` (render /
+# still / audio / studio do it for you) to bake changes into the video theme.
+#
+# Every key below shows its default in the trailing comment — delete a line to
+# fall back to that default, or change the value to override it. Only the keys
+# you keep here override the built-in theme (remotion/theme.defaults.ts); all
+# other theme values stay at their defaults.
+#
+# Section names mirror the theme's shape, e.g. [fonts] titleSize sets
+# theme.fonts.titleSize. Colors are any CSS color string. Times are in
+# milliseconds unless the key ends in "Frames" (30 fps).
+# ─────────────────────────────────────────────────────────────────────────────
+
+# On-screen branding, applied to every card unless a card overrides it in its
+# own JSON. (These are not part of the render theme.)
+[branding]
+author = "Dr. Lizard"   # default "Dr. Lizard" — persona shown in header/outro
+main = "Board Review"   # default "Board Review" — collection label for card generation
+
+# Bauhaus primary triad + neutral. Any CSS color works.
+[colors]
+bg = "#F5F2E8"        # default "#F5F2E8" — page background (off-white)
+ink = "#111111"       # default "#111111" — main text
+marker = "#C8302A"    # default "#C8302A" — red marker strokes / **bold**
+answerBg = "#E8C018"  # default "#E8C018" — yellow answer box
+header = "#1E3878"    # default "#1E3878" — breadcrumb + author header (blue)
+
+[fonts]
+family = "Noto Sans, sans-serif"  # default "Noto Sans, sans-serif"
+titleSize = 72          # default 72  — LongForm title (px, before auto-fit shrink)
+titleWeight = 800       # default 800 — title weight
+shortsTitleSize = 60    # default 60  — Shorts title
+answerSize = 56         # default 56  — answer text
+detailSize = 48         # default 48  — LongForm detail bullets
+shortsDetailSize = 52   # default 52  — Shorts detail bullets
+headerSize = 24         # default 24  — breadcrumb/author header
+
+# Pacing (ms unless noted). endFadeFrames is in frames at 30 fps.
+[timing]
+revealDurationMs = 400  # default 400  — karaoke word reveal wipe
+detailGapMs = 300       # default 300  — silence between detail bullets
+endHoldMs = 1500        # default 1500 — hold on last frame before outro
+musicTailMs = 2500      # default 2500 — music-only tail after narration
+endFadeFrames = 30      # default 30   — fade to the end card (frames)
+
+# Background music levels (0..1).
+[music]
+low = 0.05   # default 0.05 — volume under narration
+high = 0.28  # default 0.28 — volume during the swell after narration
+
+# Whole-video opening settle (push-in + blur clears over these frames).
+[opening]
+settleFrames = 12   # default 12   — frames to settle in
+startScale = 1.05   # default 1.05 — initial zoom
+maxBlur = 12        # default 12   — initial blur (px)
+
+# Title karaoke intro that scales down into its anchor.
+[titleIntro]
+sizeBoost = 1.8   # default 1.8 — how much bigger the title starts (×)
+settleMs = 700    # default 700 — time to settle into the anchor position
+
+# End card ("outro") shown over the music tail.
+[outro]
+startAfterNarrationMs = 1000  # default 1000 — delay after narration before it appears
+longformSize = 190            # default 190  — author size, LongForm (px)
+shortsSize = 130              # default 130  — author size, Shorts (px)
+grainOpacity = 0.14           # default 0.14 — extra grain on the end card
+
+# "Boil" = the frame-stepped jitter that makes strokes feel hand-drawn.
+[boil]
+boilFps = 10    # default 10  — how many times per second the jitter re-rolls
+jitterPx = 1.4  # default 1.4 — jitter amplitude (px)
+
+# Red marker stroke drawn under **bold** words.
+[marker]
+strokeWidth = 7   # default 7   — stroke thickness (px)
+wobblePx = 2.4    # default 2.4 — hand-drawn wobble amplitude (px)
+drawMs = 280      # default 280 — time to draw each stroke
+
+# Paper grain overlay strength (0..1).
+[grain]
+opacity = 0.06  # default 0.06

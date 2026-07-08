@@ -1,0 +1,57 @@
+{
+  "colors": {
+    "bg": "#F5F2E8",
+    "ink": "#111111",
+    "marker": "#C8302A",
+    "answerBg": "#E8C018",
+    "header": "#1E3878"
+  },
+  "fonts": {
+    "family": "Noto Sans, sans-serif",
+    "titleSize": 72,
+    "titleWeight": 800,
+    "shortsTitleSize": 60,
+    "answerSize": 56,
+    "detailSize": 48,
+    "shortsDetailSize": 52,
+    "headerSize": 24
+  },
+  "timing": {
+    "revealDurationMs": 400,
+    "detailGapMs": 300,
+    "endHoldMs": 1500,
+    "musicTailMs": 2500,
+    "endFadeFrames": 30
+  },
+  "music": {
+    "low": 0.05,
+    "high": 0.28
+  },
+  "opening": {
+    "settleFrames": 12,
+    "startScale": 1.05,
+    "maxBlur": 12
+  },
+  "titleIntro": {
+    "sizeBoost": 1.8,
+    "settleMs": 700
+  },
+  "outro": {
+    "startAfterNarrationMs": 1000,
+    "longformSize": 190,
+    "shortsSize": 130,
+    "grainOpacity": 0.14
+  },
+  "boil": {
+    "boilFps": 10,
+    "jitterPx": 1.4
+  },
+  "marker": {
+    "strokeWidth": 7,
+    "wobblePx": 2.4,
+    "drawMs": 280
+  },
+  "grain": {
+    "opacity": 0.06
+  }
+}

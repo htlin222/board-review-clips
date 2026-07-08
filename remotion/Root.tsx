@@ -14,8 +14,8 @@ async function loadTiming(cardId: string): Promise<CardTiming> {
   return response.json();
 }
 
-const defaultTiming: CardTiming = { cardId: "", main: "", section: "", topic: "", author: "", segments: [] };
-const defaultProps = { cardId: "scd-median-survival", timing: defaultTiming, main: "", section: "", topic: "", author: "" };
+const defaultTiming: CardTiming = { cardId: "", section: "", topic: "", author: "", segments: [] };
+const defaultProps = { cardId: "scd-median-survival", timing: defaultTiming, section: "", topic: "", author: "" };
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -33,7 +33,7 @@ export const RemotionRoot: React.FC = () => {
           const { totalFrames } = buildTimeline(timing);
           return {
             durationInFrames: totalFrames,
-            props: { ...props, timing, main: timing.main, section: timing.section, topic: timing.topic, author: timing.author },
+            props: { ...props, timing, section: timing.section, topic: timing.topic, author: timing.author },
           };
         }}
       />
@@ -50,7 +50,7 @@ export const RemotionRoot: React.FC = () => {
           const { totalFrames } = buildTimeline(timing);
           return {
             durationInFrames: totalFrames,
-            props: { ...props, timing, main: timing.main, section: timing.section, topic: timing.topic, author: timing.author },
+            props: { ...props, timing, section: timing.section, topic: timing.topic, author: timing.author },
           };
         }}
       />

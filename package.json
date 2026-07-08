@@ -6,12 +6,13 @@
 	"packageManager": "pnpm@10.13.1",
 	"scripts": {
 		"prepare": "git config core.hooksPath .githooks",
-		"audio": "tsx scripts/generate-audio.ts",
+		"sync-config": "tsx scripts/sync-config.ts",
+		"audio": "pnpm sync-config && tsx scripts/generate-audio.ts",
 		"validate": "tsx scripts/validate-cards.ts",
 		"issue-to-cards": "tsx scripts/issue-to-cards.ts",
-		"render": "tsx scripts/render.ts",
-		"still": "tsx scripts/still.ts",
-		"studio": "remotion studio remotion/index.ts",
+		"render": "pnpm sync-config && tsx scripts/render.ts",
+		"still": "pnpm sync-config && tsx scripts/still.ts",
+		"studio": "pnpm sync-config && remotion studio remotion/index.ts",
 		"test": "vitest run"
 	},
 	"dependencies": {

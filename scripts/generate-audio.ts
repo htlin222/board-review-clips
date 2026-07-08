@@ -5,6 +5,7 @@ import { theme } from "../remotion/theme";
 import { parseWordTimings } from "../remotion/lib/timing";
 import type { Card, CardTiming, SegmentTiming } from "../remotion/lib/types";
 import { parseMarkers, attachWordMarkers } from "../remotion/lib/markers";
+import { loadSiteConfig } from "../remotion/lib/siteConfig";
 
 const CARDS_DIR = "cards";
 const AUDIO_DIR = "remotion/audio";
@@ -90,10 +91,9 @@ async function processCard(cardPath: string) {
 
   const timing: CardTiming = {
     cardId: card.id,
-    main: card.main,
     section: card.section,
     topic: card.topic,
-    author: card.author,
+    author: card.author ?? loadSiteConfig().author,
     segments,
   };
   writeFileSync(join(AUDIO_DIR, card.id, "timing.json"), JSON.stringify(timing, null, 2));

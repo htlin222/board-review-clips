@@ -9,7 +9,6 @@ const { fontFamily } = loadFont("italic", { weights: ["400"] });
 const REVEAL_FRAMES = 18;
 
 export function Header({
-  main,
   section,
   topic,
   author,
@@ -17,7 +16,6 @@ export function Header({
   top,
   sideInset = theme.layout.headerMargin,
 }: {
-  main: string;
   section: string;
   topic: string;
   author?: string;
@@ -26,7 +24,7 @@ export function Header({
   sideInset?: number;
 }) {
   const frame = useCurrentFrame();
-  const breadcrumb = [main, section, topic].filter(Boolean).join(" · ");
+  const breadcrumb = [section, topic].filter(Boolean).join(" · ");
   const revealT = interpolate(frame, [0, REVEAL_FRAMES], [0, 1], {
     easing: easeInCubic,
     extrapolateLeft: "clamp",

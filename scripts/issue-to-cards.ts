@@ -19,11 +19,12 @@
 import { writeFileSync, appendFileSync } from "fs";
 import { join } from "path";
 import { cardSchema, type CardInput } from "../remotion/lib/cardSchema";
+import { loadSiteConfig } from "../remotion/lib/siteConfig";
 
 const CARDS_DIR = "cards";
-// Every card ships under the same on-screen persona, regardless of who filed
-// the issue. Forced after parsing so the LLM can't override it.
-const CARD_AUTHOR = "Dr. Lizard";
+// Site-wide persona/collection come from config.toml so they live in one place.
+// Forced after parsing so the LLM can't override the author.
+const { author: CARD_AUTHOR, main: CARD_MAIN } = loadSiteConfig();
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
@@ -117,7 +118,7 @@ function buildPrompt(title: string, body: string): string {
 - "title" 放問題，"answer" 放答案，"detail" 放每個支持論點（一個 bullet 一個字串）
 - 保留內文中的 **粗體** 標記（螢幕上會畫成紅色標記），但移除引用連結，例如 [[1]](http://...) 這種參考標註要拿掉，只留純文字
 - "author" 一律填 "${CARD_AUTHOR}"
-- "main" 預設 "Board Review"；"section" / "topic" 依內容判斷
+- "main" 預設 "${CARD_MAIN}"；"section" / "topic" 依內容判斷
 - "releaseNote" 用一段話總結該張卡片的重點
 
 請符合這個 schema：
@@ -248,7 +249,7 @@ async function main() {
     const c = candidate as Partial<CardInput>;
     // Derive/normalise the id (and thus filename) before validating.
     const id = ensureUniqueId(deriveId(c.id, c.title, i), usedIds);
-    // Force the persona — the card author is always Dr. Lizard.
+    // Force the persona from config.toml so every card shares one author.
     const card = { ...c, id, author: CARD_AUTHOR };
 
     const result = cardSchema.safeParse(card);

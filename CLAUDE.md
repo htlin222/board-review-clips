@@ -5,6 +5,7 @@ Vox-styled board-review flashcard videos rendered with Remotion. Cards in `cards
 ## Commands
 
 ```bash
+pnpm sync-config                   # config.toml -> remotion/config.generated.json (theme overrides)
 pnpm test                          # vitest unit tests (lib/ logic)
 pnpm exec tsc --noEmit             # typecheck
 pnpm validate [cardId...]          # zod format check for cards/*.json
@@ -20,7 +21,7 @@ Verify visual changes with `pnpm still` at a few key frames (renders are the rea
 
 - **Data flow**: `cards/<id>.json` → `scripts/generate-audio.ts` (msedge-tts, one segment per title/answer/detail-N) → `remotion/audio/<id>/timing.json` (word-level timings) → copied to `assets/audio/` → compositions read it via `staticFile`.
 - **Timeline**: `lib/useCardTimeline.ts` `buildTimeline()` lays segments back-to-back with `detailGapMs` gaps, plus an extra hold after the title (title settle + answer-box fade) and an end hold + music tail. All frame positions derive from `timing.json` durations — never hardcode frame numbers.
-- **Theme**: `remotion/theme.ts` is the single tuning point — every size, color, timing, and effect strength. Change behavior there before touching components.
+- **Theme**: `remotion/theme.defaults.ts` holds every size, color, timing, and effect strength; `config.toml` (repo root) overrides any subset of them. `pnpm sync-config` bakes `config.toml` into `remotion/config.generated.json`, which `theme.ts` deep-merges over the defaults and re-exports as `theme` (consumers still `import { theme }`). Change behavior via `config.toml` (each key documents its default); add brand-new knobs in `theme.defaults.ts`. Never edit `config.generated.json` by hand.
 - **Text fitting**: `lib/fitText.ts` deterministically shrinks title/answer to fit fixed layout bands (estimates width as chars × ratio, deliberately over-estimating). The yellow answer box must never shift position; text shrinks instead.
 - **Title intro**: title karaoke plays centered at `titleIntro.sizeBoost`× size, then font-size/top/weight tween into the anchor (per-frame reflow moves line breaks). Answer box fades in only after it lands.
 
