@@ -21,6 +21,9 @@ import { join } from "path";
 import { cardSchema, type CardInput } from "../remotion/lib/cardSchema";
 
 const CARDS_DIR = "cards";
+// Every card ships under the same on-screen persona, regardless of who filed
+// the issue. Forced after parsing so the LLM can't override it.
+const CARD_AUTHOR = "Dr. Lizard";
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
@@ -102,7 +105,7 @@ function batchChunks(chunks: string[], maxChars = 3000): string[] {
   return batches;
 }
 
-function buildPrompt(title: string, body: string, author: string): string {
+function buildPrompt(title: string, body: string): string {
   return `請把以下 GitHub Issue 內容轉換成「嚴格合法 JSON」。
 
 規則：
@@ -113,7 +116,7 @@ function buildPrompt(title: string, body: string, author: string): string {
 - "id" 必須是 kebab-case（僅小寫英文、數字、連字號），且每張卡片唯一、能當檔名；請用能描述內容的關鍵字（例如 "race-trial-primary-endpoint"），不要用 "card-1"、"card-2" 這種流水號
 - "title" 放問題，"answer" 放答案，"detail" 放每個支持論點（一個 bullet 一個字串）
 - 保留內文中的 **粗體** 標記（螢幕上會畫成紅色標記），但移除引用連結，例如 [[1]](http://...) 這種參考標註要拿掉，只留純文字
-- "author" 若 Issue 沒特別指定，就用 "${author}"
+- "author" 一律填 "${CARD_AUTHOR}"
 - "main" 預設 "Board Review"；"section" / "topic" 依內容判斷
 - "releaseNote" 用一段話總結該張卡片的重點
 
@@ -212,7 +215,6 @@ function detectCardCount(body: string): number {
 async function main() {
   const title = process.env.ISSUE_TITLE ?? "";
   const body = process.env.ISSUE_BODY ?? "";
-  const author = process.env.ISSUE_AUTHOR?.trim() || "Board Review";
 
   if (!body.trim()) throw new Error("ISSUE_BODY is empty");
 
@@ -231,7 +233,7 @@ async function main() {
 
   const candidates: unknown[] = [];
   for (let b = 0; b < batches.length; b++) {
-    const raw = await callGroq(buildPrompt(title, batches[b], author));
+    const raw = await callGroq(buildPrompt(title, batches[b]));
     const cards = extractCards(raw);
     console.log(`  batch ${b + 1}/${batches.length}: ${cards.length} card(s)`);
     candidates.push(...cards);
@@ -246,7 +248,8 @@ async function main() {
     const c = candidate as Partial<CardInput>;
     // Derive/normalise the id (and thus filename) before validating.
     const id = ensureUniqueId(deriveId(c.id, c.title, i), usedIds);
-    const card = { ...c, id };
+    // Force the persona — the card author is always Dr. Lizard.
+    const card = { ...c, id, author: CARD_AUTHOR };
 
     const result = cardSchema.safeParse(card);
     if (!result.success) {

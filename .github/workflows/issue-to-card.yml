@@ -106,7 +106,6 @@ jobs:
           ISSUE_TITLE: ${{ steps.issue.outputs.title }}
         run: |
           export ISSUE_BODY="$(jq -r '.body' issue.json)"
-          export ISSUE_AUTHOR="$(jq -r '.author.name // .author.login' issue.json)"
           pnpm issue-to-cards
 
       - name: Validate generated cards
