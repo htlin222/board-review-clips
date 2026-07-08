@@ -1,0 +1,16 @@
+{
+  "id": "extravascular-hemolysis-from-c3-fragment-deposition",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "PNH",
+  "author": "Dr. Lizard",
+  "title": "What causes elevated bilirubin despite improved hemoglobin on C5 inhibitors in PNH?",
+  "answer": "Extravascular hemolysis from C3 fragment deposition on PNH red cells removed by splenic and hepatic macrophages.",
+  "detail": [
+    "C5 inhibitors prevent intravascular hemolysis but allow ongoing proximal complement activation and C3 opsonization of red cells.",
+    "C3-coated erythrocytes are cleared by macrophages in spleen and liver, causing extravascular hemolysis without elevating LDH significantly.",
+    "Clinically significant extravascular hemolysis affects twenty to twenty-five percent of patients on ravulizumab or eculizumab therapy.",
+    "Direct antiglobulin test positive for C3d confirms C3 fragment deposition and extravascular hemolysis mechanism in these patients."
+  ],
+  "releaseNote": "C5 inhibitors prevent intravascular hemolysis but allow ongoing extravascular hemolysis due to C3 fragment deposition on PNH red cells, affecting 20-25% of patients."
+}
