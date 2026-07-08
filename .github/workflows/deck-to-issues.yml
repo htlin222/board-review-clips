@@ -88,19 +88,34 @@ jobs:
           gh issue comment "$NUMBER" --body "$(printf '❌ Could not parse any cards from this deck issue.\n\nExpected format:\n```\n**title**: ...\n**answer**: ...\n**detail**:\n- bullet 1\n- bullet 2\n---\n(next card)\n```\n\n_Aborting — no card issues were created._')"
           exit 1
 
-      # Create individual card issues — each triggers issue-to-card.yml
+      # Create individual card issues (unlabelled — labelled in next step)
       - name: Split deck into card issues
         id: split
         env:
-          GH_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
+          GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ steps.issue.outputs.number }}
           ISSUE_TITLE: ${{ steps.issue.outputs.title }}
         run: |
           export ISSUE_BODY="$(jq -r '.body' issue.json)"
           pnpm deck-to-issues
 
-      # Comment on the deck issue with a summary
-      - name: Post summary
+      # Label each spawned issue with `card` using the PAT so the `labeled`
+      # event triggers issue-to-card.yml. GITHUB_TOKEN can't trigger other
+      # workflows, so the PAT is required here for the chain reaction.
+      - name: Label card issues
+        env:
+          GH_TOKEN: ${{ secrets.CARD_PR_TOKEN || github.token }}
+          CARD_ISSUES: ${{ steps.split.outputs.card_issues }}
+        run: |
+          IFS=',' read -ra nums <<< "$CARD_ISSUES"
+          for n in "${nums[@]}"; do
+            echo "Labelling issue #$n with 'card'"
+            gh issue edit "$n" --add-label card
+            sleep 2
+          done
+
+      # Comment on the deck issue with a summary, then close it.
+      - name: Post summary and close deck
         if: success()
         env:
           GH_TOKEN: ${{ github.token }}
@@ -114,3 +129,4 @@ jobs:
             issues="$issues"$'\n'"- #$n"
           done
           gh issue comment "$NUMBER" --body "$(printf '✅ Deck split into **%s** card issue(s):\n%s\n\nEach will be processed by the card pipeline (generate → PR → merge → render → release).' "$CARD_COUNT" "$issues")"
+          gh issue close "$NUMBER" --reason completed --comment "Deck split complete — individual card issues created."
