@@ -1,0 +1,15 @@
+{
+  "id": "c3d-positivity-on-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "PNH",
+  "author": "Dr. Lizard",
+  "title": "What is the clinical significance of C3d positivity on direct antiglobulin testing in PNH?",
+  "answer": "C3d positivity confirms C3 fragment opsonization causing extravascular hemolysis and indicates need for proximal complement inhibition.",
+  "detail": [
+    "C3d-coated PNH erythrocytes are recognized by C3-specific receptors on macrophages in liver and spleen.",
+    "This finding distinguishes complement-mediated extravascular hemolysis from other causes of persistent anemia on C5 inhibitors.",
+    "Positive C3d direct antiglobulin test supports switching from terminal to proximal complement blockade therapy."
+  ],
+  "releaseNote": "C3d positivity on direct antiglobulin testing in PNH indicates C3 fragment opsonization and extravascular hemolysis, requiring proximal complement inhibition therapy."
+}
