@@ -26,7 +26,10 @@ const CARDS_DIR = "cards";
 // Forced after parsing so the LLM can't override the author.
 const { author: CARD_AUTHOR, main: CARD_MAIN } = loadSiteConfig();
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+// One-card JSON extraction is easy, so default to the small, fast model — it
+// has a much higher free-tier tokens-per-minute budget than 70b, which is what
+// trips the rate limit. Override with GROQ_MODEL for anything heavier.
+const MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
 
 function slugify(input: string): string {
   return input
