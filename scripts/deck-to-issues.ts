@@ -333,7 +333,6 @@ async function main() {
   if (cards.length === 0) throw new Error("No cards found in deck body");
 
   console.log(`Parsed ${cards.length} card(s) from deck`);
-
   const { execSync } = await import("child_process");
   const createdNumbers: string[] = [];
 

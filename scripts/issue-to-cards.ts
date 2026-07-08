@@ -123,6 +123,7 @@ function buildPrompt(title: string, body: string): string {
 - 一個 Issue 可能包含多張卡片（例如 "Card 1"、"Card 2"...），請每一張都轉成一個物件放進 "cards" 陣列
 - "id" 必須是 kebab-case（僅小寫英文、數字、連字號），且每張卡片唯一、能當檔名；請用能描述內容的關鍵字（例如 "race-trial-primary-endpoint"），不要用 "card-1"、"card-2" 這種流水號
 - "title" 放問題，"answer" 放答案，"detail" 放每個支持論點（一個 bullet 一個字串）
+- 保留原文的大小寫、專有名詞拼寫（例如 CMV、HSCT、IU/mL），不要全部轉小寫
 - 保留內文中的 **粗體** 標記（螢幕上會畫成紅色標記），但移除引用連結，例如 [[1]](http://...) 這種參考標註要拿掉，只留純文字
 - "author" 一律填 "${CARD_AUTHOR}"
 - "main" 預設 "${CARD_MAIN}"；"section" / "topic" 依內容判斷
