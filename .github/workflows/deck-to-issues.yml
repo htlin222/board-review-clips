@@ -99,10 +99,12 @@ jobs:
           export ISSUE_BODY="$(jq -r '.body' issue.json)"
           pnpm deck-to-issues
 
-      # Add the `card` label via the PAT so the `labeled` event triggers
-      # issue-to-card.yml. GITHUB_TOKEN creates events that can't trigger
-      # other workflows, so we remove the label (added during creation with
-      # GITHUB_TOKEN) and re-add it with the PAT.
+      # Trigger issue-to-card.yml for each spawned issue.
+      # GITHUB_TOKEN events can't trigger other workflows. CARD_PR_TOKEN
+      # (a PAT) can — but it needs Issues read/write permission.
+      # We try the PAT first; if it 403s we fall back to GITHUB_TOKEN
+      # (labels stick but don't trigger the chain — user must re-label
+      # manually or dispatch).
       - name: Trigger card pipeline
         env:
           GH_TOKEN: ${{ github.token }}
@@ -110,21 +112,32 @@ jobs:
           CARD_ISSUES: ${{ steps.split.outputs.card_issues }}
           REPO: ${{ github.repository }}
         run: |
+          triggered=0
           IFS=',' read -ra nums <<< "$CARD_ISSUES"
           for n in "${nums[@]}"; do
             echo "Triggering card pipeline for #$n"
-            # Remove the label added during creation (GITHUB_TOKEN event)
-            gh issue edit "$n" --remove-label card || true
-            sleep 1
-            # Re-add with PAT so the labeled event triggers issue-to-card.yml
-            curl -s -X POST \
-              -H "Authorization: token $PAT" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/$REPO/issues/$n/labels" \
-              -d '{"labels":["card"]}'
-            echo "  → labelled #$n"
+            if [ -n "$PAT" ]; then
+              # Remove label (GITHUB_TOKEN), re-add with PAT to fire event
+              gh issue edit "$n" --remove-label card 2>/dev/null || true
+              sleep 1
+              resp=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+                -H "Authorization: token $PAT" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/$REPO/issues/$n/labels" \
+                -d '{"labels":["card"]}')
+              if [ "$resp" = "200" ]; then
+                echo "  → labelled #$n with PAT (chain triggered)"
+                triggered=1
+              else
+                echo "  ⚠ PAT returned $resp — re-adding label with GITHUB_TOKEN"
+                gh issue edit "$n" --add-label card || true
+              fi
+            fi
             sleep 3
           done
+          if [ "$triggered" = "0" ]; then
+            echo "::warning::CARD_PR_TOKEN lacks Issues permission — card issues created with labels but chain not auto-triggered. Add Issues read/write to the PAT, or manually dispatch issue-to-card.yml for each issue."
+          fi
 
       # Comment on the deck issue with a summary, then close it.
       - name: Post summary and close deck
