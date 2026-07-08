@@ -150,9 +150,10 @@ async function callGroq(prompt: string, attempts = 4): Promise<unknown> {
       body: JSON.stringify({
         model: MODEL,
         temperature: 0.2,
-        // Enough headroom for 20+ cards while staying under the free-tier
-        // tokens-per-minute budget (prompt + completion).
-        max_tokens: 8000,
+        // Reserve just enough for one card's JSON. Groq counts prompt +
+        // max_tokens against the per-minute budget (6k TPM on 8b-instant), and
+        // an oversized reserve alone trips a 413 — one card is well under 2k.
+        max_tokens: 2000,
         response_format: { type: "json_object" },
         messages: [
           {
