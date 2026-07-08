@@ -1,0 +1,16 @@
+{
+  "id": "safe-correction-rate-for-chronic-hyponatremia",
+  "main": "Board Review",
+  "section": "Electrolyte Disorders",
+  "topic": "Hyponatremia Management",
+  "author": "Dr. Lizard",
+  "title": "How fast can serum sodium be safely corrected in chronic hyponatremia?",
+  "answer": "Correction should not exceed 8 mmol/L per 24 hours to avoid osmotic demyelination syndrome.",
+  "detail": [
+    "Overly rapid correction of chronic hyponatremia risks **osmotic demyelination syndrome**, a serious neurologic injury.",
+    "A limit of 8 mmol/L per 24 hours is recommended for most patients with chronic hyponatremia.",
+    "Higher-risk patients, including those with **alcoholism** or **malnutrition**, warrant a more cautious correction target.",
+    "If correction overshoots the target, re-lowering sodium with **dextrose** or **desmopressin** can reduce demyelination risk."
+  ],
+  "releaseNote": "The safe correction rate for serum sodium in chronic hyponatremia should not exceed 8 mmol/L per 24 hours to avoid osmotic demyelination syndrome, with higher-risk patients requiring more cautious correction targets."
+}
