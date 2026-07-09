@@ -1,0 +1,17 @@
+{
+  "id": "al-amyloidosis-clinical-features",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "AL Amyloidosis",
+  "author": "Dr. Lizard",
+  "title": "What clinical features should prompt consideration of AL amyloidosis?",
+  "answer": "Unexplained proteinuria, restrictive cardiomyopathy, peripheral neuropathy with autonomic features, or bilateral carpal tunnel syndrome warrant evaluation.",
+  "detail": [
+    "Hepatomegaly without imaging abnormalities in patients with monoclonal gammopathy should raise suspicion for AL amyloidosis.",
+    "Atypical manifestations of multiple myeloma such as macroglossia or raccoon eyes suggest possible AL amyloidosis.",
+    "Multisystemic illness unexplained by common diseases along with fatigue should prompt amyloidosis testing.",
+    "Diagnostic delays are common due to low clinical awareness and nonspecific symptoms like fatigue and weight loss.",
+    "High index of suspicion is essential to prevent delays that contribute to irreversible organ damage."
+  ],
+  "releaseNote": "AL amyloidosis should be considered in patients with unexplained proteinuria, restrictive cardiomyopathy, peripheral neuropathy with autonomic features, or bilateral carpal tunnel syndrome. Early diagnosis is crucial to prevent irreversible organ damage."
+}
