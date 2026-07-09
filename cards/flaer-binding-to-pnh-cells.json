@@ -1,0 +1,16 @@
+{
+  "id": "flaer-binding-to-pnh-cells",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "PNH",
+  "author": "Dr. Lizard",
+  "title": "Why does FLAER bind to PNH cells differently than normal cells?",
+  "answer": "FLAER is a fluorescent bacterial toxin that specifically binds GPI anchors, which are absent on PNH cells.",
+  "detail": [
+    "FLAER stands for fluorescent aerolysin, a modified bacterial toxin from Aeromonas hydrophila that binds GPI anchors directly.",
+    "PNH cells lack GPI anchors due to PIGA mutations, so they show dim or absent FLAER binding.",
+    "FLAER is more sensitive than CD55 or CD59 antibodies, detecting clones as small as 0.01 percent.",
+    "FLAER is not used on red blood cells because glycophorin causes nonspecific weak binding that reduces accuracy."
+  ],
+  "releaseNote": "FLAER binds to PNH cells differently than normal cells due to the absence of GPI anchors, which FLAER specifically targets."
+}
