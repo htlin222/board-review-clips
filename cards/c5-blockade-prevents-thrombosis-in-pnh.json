@@ -1,0 +1,16 @@
+{
+  "id": "c5-blockade-prevents-thrombosis-in-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria",
+  "author": "Dr. Lizard",
+  "title": "How does C5 blockade prevent thrombosis in paroxysmal nocturnal hemoglobinuria?",
+  "answer": "C5 inhibition prevents MAC formation, reducing intravascular hemolysis, free hemoglobin release, and nitric oxide depletion.",
+  "detail": [
+    "Blocking MAC assembly stops red cell lysis, eliminating the source of free hemoglobin that scavenges nitric oxide.",
+    "Preserved nitric oxide maintains vasodilation and inhibits platelet activation, reducing thrombotic risk by approximately 85 percent.",
+    "C5a inhibition prevents complement-mediated activation of coagulation cascade and suppression of fibrinolysis.",
+    "Eculizumab reduced thrombosis from 50 percent of deaths to rare events, dramatically improving long-term survival."
+  ],
+  "releaseNote": "C5 blockade prevents thrombosis in paroxysmal nocturnal hemoglobinuria by inhibiting MAC formation, preserving nitric oxide, and reducing thrombotic risk."
+}
