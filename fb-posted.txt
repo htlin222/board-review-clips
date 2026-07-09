@@ -1,3 +1,4 @@
 card-cmv-viral-load-threshold-hsct
 card-tls-phosphorus-calcium
 card-scd-median-survival
+card-hyponatremia-severity-categories
