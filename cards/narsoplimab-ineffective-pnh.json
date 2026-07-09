@@ -1,0 +1,16 @@
+{
+  "id": "narsoplimab-ineffective-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria",
+  "author": "Dr. Lizard",
+  "title": "Why is narsoplimab ineffective for treating paroxysmal nocturnal hemoglobinuria?",
+  "answer": "Narsoplimab blocks the lectin pathway via MASP-2, but PNH hemolysis is driven by the alternative pathway.",
+  "detail": [
+    "PNH pathophysiology results from uncontrolled alternative pathway activation through continuous C3 tick-over on GPI-deficient cells.",
+    "Narsoplimab targets MASP-2, a serine protease essential for lectin pathway activation, which plays minimal role in PNH.",
+    "The lectin pathway contributes negligibly to complement-mediated hemolysis in PNH compared to alternative pathway amplification.",
+    "Narsoplimab is FDA-approved for transplant-associated thrombotic microangiopathy, not for PNH treatment."
+  ],
+  "releaseNote": "Narsoplimab is ineffective for treating paroxysmal nocturnal hemoglobinuria because it targets the lectin pathway, which plays a minimal role in PNH, whereas the alternative pathway drives hemolysis in this condition."
+}
