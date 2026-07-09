@@ -1,0 +1,13 @@
+{
+  "id": "bone-scintigraphy-differentiation-attr-al-cardiac-amyloidosis",
+  "main": "Board Review",
+  "section": "Cardiology",
+  "topic": "Cardiac Amyloidosis",
+  "author": "Dr. Lizard",
+  "title": "How does bone scintigraphy differentiate ATTR from AL cardiac amyloidosis?",
+  "answer": "Grade 2 or 3 cardiac uptake without monoclonal protein indicates ATTR with over 98 percent specificity.",
+  "detail": [
+    "In the absence of monoclonal protein, grade 2 or 3 cardiac uptake on bone scintigraphy is diagnostic of ATTR. Bone scintigraphy alone cannot distinguish ATTR from AL because substantial uptake occurs in over 20 percent of AL cases. Serum and urine immunofixation plus serum free light chains must be tested to exclude AL amyloidosis. Grade 0 bone scintigraphy essentially excludes ATTR cardiac amyloidosis but occurs in most AL cardiac amyloidosis patients. SPECT imaging confirms myocardial retention versus blood pool or rib uptake signal on all positive scans."
+  ],
+  "releaseNote": "Bone scintigraphy can differentiate ATTR from AL cardiac amyloidosis with high specificity, but requires additional testing to exclude AL amyloidosis."
+}
