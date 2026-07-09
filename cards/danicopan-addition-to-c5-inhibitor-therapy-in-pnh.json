@@ -1,0 +1,16 @@
+{
+  "id": "danicopan-addition-to-c5-inhibitor-therapy-in-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria (PNH)",
+  "author": "Dr. Lizard",
+  "title": "When should danicopan be added to C5 inhibitor therapy in PNH?",
+  "answer": "Danicopan is added when patients develop symptomatic anemia from extravascular hemolysis despite ongoing C5 inhibitor treatment.",
+  "detail": [
+    "Danicopan is a factor D inhibitor approved by FDA in 2024 as add-on therapy to eculizumab or ravulizumab.",
+    "It blocks C3 convertase formation, reducing C3 fragment deposition and subsequent macrophage-mediated red cell clearance.",
+    "The combination maintains C5 blockade for intravascular hemolysis while adding proximal inhibition for extravascular hemolysis control.",
+    "This dual approach avoids the breakthrough hemolysis risk of switching from C5 inhibitor to C3 inhibitor monotherapy."
+  ],
+  "releaseNote": "Danicopan is added to C5 inhibitor therapy in PNH when patients develop symptomatic anemia from extravascular hemolysis, providing a dual approach to hemolysis control while avoiding breakthrough hemolysis risk."
+}
