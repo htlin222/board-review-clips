@@ -1,0 +1,16 @@
+{
+  "id": "extravascular-hemolysis-vs-breakthrough-hemolysis-in-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "PNH",
+  "author": "Dr. Lizard",
+  "title": "What defines the prognosis difference between extravascular hemolysis and breakthrough hemolysis in PNH?",
+  "answer": "Extravascular hemolysis causes chronic anemia without thrombosis; breakthrough hemolysis causes acute crises with potential thrombotic complications.",
+  "detail": [
+    "Extravascular hemolysis produces persistent fatigue and transfusion dependence but does not increase thrombotic risk if intravascular hemolysis is controlled.",
+    "Breakthrough hemolysis represents acute complement activation with sudden hemoglobin drops, hemoglobinuria, and possible thrombotic events.",
+    "Patients with extravascular hemolysis require switching to proximal inhibitors to achieve hemoglobin normalization and improved quality of life.",
+    "Breakthrough hemolysis requires urgent dose adjustment or interval shortening of C5 inhibitors to prevent complications."
+  ],
+  "releaseNote": "Extravascular hemolysis in PNH is characterized by chronic anemia without thrombosis, while breakthrough hemolysis is marked by acute crises with potential thrombotic complications, requiring prompt dose adjustment or interval shortening of C5 inhibitors."
+}
