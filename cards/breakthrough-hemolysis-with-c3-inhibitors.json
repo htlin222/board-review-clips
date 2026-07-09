@@ -1,0 +1,16 @@
+{
+  "id": "breakthrough-hemolysis-with-c3-inhibitors",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Aplastic Anemia",
+  "author": "Dr. Lizard",
+  "title": "Why is breakthrough hemolysis more severe with C3 inhibitors than C5 inhibitors?",
+  "answer": "Incomplete C3 inhibition allows enzymatic amplification, where each C3 convertase generates multiple MACs, causing massive hemolysis.",
+  "detail": [
+    "C3 convertase is an enzyme that cleaves multiple C5 molecules, amplifying downstream MAC formation exponentially.",
+    "With C5 inhibitors, each escaped C5 molecule forms only one MAC, limiting hemolysis severity.",
+    "With C3 inhibitors, incomplete blockade allows C3 convertase formation, which then cleaves many C5 molecules simultaneously.",
+    "This enzymatic amplification makes breakthrough hemolysis potentially catastrophic with pegcetacoplan compared to eculizumab."
+  ],
+  "releaseNote": "Breakthrough hemolysis is more severe with C3 inhibitors due to enzymatic amplification, where C3 convertase generates multiple MACs, whereas C5 inhibitors limit hemolysis severity by forming only one MAC per escaped C5 molecule."
+}
