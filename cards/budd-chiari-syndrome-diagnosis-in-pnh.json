@@ -1,0 +1,16 @@
+{
+  "id": "budd-chiari-syndrome-diagnosis-in-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria (PNH)",
+  "author": "Dr. Lizard",
+  "title": "What is the mechanism of Budd-Chiari syndrome diagnosis using nuclear medicine in PNH?",
+  "answer": "Technetium-99m sulfur colloid scan shows heterogeneous liver uptake with relatively increased caudate lobe enhancement.",
+  "detail": [
+    "Hepatic vein thrombosis causes differential blood flow, with caudate lobe receiving direct inferior vena cava drainage.",
+    "Technetium-99m macroaggregated albumin can assess collateral circulation development in chronic Budd-Chiari syndrome.",
+    "Doppler ultrasound is the first-line imaging, followed by CT or MRI venography for definitive diagnosis.",
+    "Budd-Chiari is the most common thrombotic complication in PNH, accounting for significant mortality before complement inhibition."
+  ],
+  "releaseNote": "Budd-Chiari syndrome diagnosis in PNH involves nuclear medicine techniques, including technetium-99m sulfur colloid scan and technetium-99m macroaggregated albumin, to assess liver uptake and collateral circulation development."
+}
