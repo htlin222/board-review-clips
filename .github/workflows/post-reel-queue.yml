@@ -42,7 +42,7 @@ jobs:
           # Read the posted log from the fb-state branch (empty if absent).
           gh api "repos/$GITHUB_REPOSITORY/contents/$STATE_FILE?ref=$STATE_BRANCH" \
             --jq '.content' 2>/dev/null | base64 --decode > posted.txt || : > posted.txt
-          mapfile -t all < <(gh release list -L 500 --json tagName,createdAt \
+          mapfile -t all < <(gh release list -R "$GITHUB_REPOSITORY" -L 500 --json tagName,createdAt \
             -q 'sort_by(.createdAt) | .[] | select(.tagName|startswith("card-")) | .tagName')
           next=""
           for t in "${all[@]}"; do
@@ -61,7 +61,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.pick.outputs.tag }}
         run: |
-          gh release download "$TAG" -p short.mp4 --clobber
+          gh release download "$TAG" -R "$GITHUB_REPOSITORY" -p short.mp4 --clobber
           test -f short.mp4 || { echo "::error::short.mp4 missing on $TAG"; exit 1; }
 
       - name: Publish to Facebook
@@ -72,9 +72,9 @@ jobs:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_PAGE_ACCESS_TOKEN: ${{ secrets.FB_PAGE_ACCESS_TOKEN }}
         run: |
-          name=$(gh release view "$TAG" --json name -q .name)
+          name=$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json name -q .name)
           # Caption = release title + note; drop the "---" automated-build footer.
-          note=$(gh release view "$TAG" --json body -q .body | sed '/^---$/,$d')
+          note=$(gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json body -q .body | sed '/^---$/,$d')
           caption=$(printf '%s\n\n%s' "$name" "$note")
           uvx --from git+https://github.com/htlin222/fb-cli fb-cli post-reel short.mp4 "$caption"
 
