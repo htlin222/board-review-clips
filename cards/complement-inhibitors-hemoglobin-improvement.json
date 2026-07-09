@@ -1,0 +1,16 @@
+{
+  "id": "complement-inhibitors-hemoglobin-improvement",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Aplastic Anemia",
+  "author": "Dr. Lizard",
+  "title": "What hemoglobin improvement do proximal complement inhibitors achieve compared to C5 inhibitors?",
+  "answer": "Both pegcetacoplan and iptacopan increase hemoglobin by approximately 2.4 grams per deciliter versus C5 inhibitors.",
+  "detail": [
+    "Proximal inhibitors control both intravascular and extravascular hemolysis, unlike C5 inhibitors that only block intravascular lysis.",
+    "Many patients achieve hemoglobin normalization above 12 grams per deciliter, eliminating transfusion dependence completely.",
+    "C5 inhibitors stabilize hemoglobin in only about half of patients due to ongoing C3-mediated extravascular hemolysis.",
+    "The 2.4 gram per deciliter improvement translates to significant quality of life gains and reduced fatigue."
+  ],
+  "releaseNote": "Proximal complement inhibitors, such as pegcetacoplan and iptacopan, offer improved hemoglobin improvement compared to C5 inhibitors, with significant quality of life gains and reduced fatigue."
+}
