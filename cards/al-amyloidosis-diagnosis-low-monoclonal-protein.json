@@ -1,0 +1,17 @@
+{
+  "id": "al-amyloidosis-diagnosis-low-monoclonal-protein",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "AL Amyloidosis",
+  "author": "Dr. Lizard",
+  "title": "How is AL amyloidosis diagnosed in patients with low monoclonal protein levels?",
+  "answer": "Serum and urine immunofixation plus serum free light chain assay detect over 99 percent of AL cases.",
+  "detail": [
+    "Standard protein electrophoresis often misses AL amyloidosis because monoclonal protein concentration is frequently too low for detection.",
+    "Immunofixation electrophoresis on both serum and urine specimens is more sensitive than standard protein electrophoresis for detecting monoclonal proteins.",
+    "Serum free light chain assay combined with serum and urine immunofixation achieves greater than 99 percent sensitivity for AL.",
+    "Tissue diagnosis requires Congo red staining showing green birefringence under polarized light microscopy plus evidence of plasma cell dyscrasia.",
+    "Abdominal fat pad aspiration is positive in approximately 70 to 75 percent of AL amyloidosis patients."
+  ],
+  "releaseNote": "AL amyloidosis can be challenging to diagnose in patients with low monoclonal protein levels. Immunofixation electrophoresis and serum free light chain assay are key diagnostic tools, with tissue diagnosis confirmed by Congo red staining and evidence of plasma cell dyscrasia."
+}
