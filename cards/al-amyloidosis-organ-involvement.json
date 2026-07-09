@@ -1,0 +1,17 @@
+{
+  "id": "al-amyloidosis-organ-involvement",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "AL Amyloidosis",
+  "author": "Dr. Lizard",
+  "title": "What organs are most commonly affected in AL amyloidosis?",
+  "answer": "The kidneys and heart are most commonly affected, occurring in 60 to 80 percent of patients.",
+  "detail": [
+    "Kidney involvement occurs in 60 to 70 percent of patients, typically manifesting as nephrotic-range proteinuria and edema.",
+    "Cardiac involvement occurs in 70 to 80 percent of patients and is the leading cause of death.",
+    "Early cardiac signs include low voltage on electrocardiography, concentric ventricular thickening, and elevated cardiac biomarkers like troponin and NT-proBNP.",
+    "Nervous system involvement causes small-fiber neuropathy and autonomic dysfunction with orthostatic hypotension and gastrointestinal motility disturbances.",
+    "Macroglossia occurs in approximately 10 to 20 percent of patients with AL amyloidosis."
+  ],
+  "releaseNote": "AL amyloidosis commonly affects the kidneys and heart, with kidney involvement occurring in 60-70% and cardiac involvement in 70-80% of patients. Early cardiac signs include low voltage on electrocardiography and elevated cardiac biomarkers."
+}
