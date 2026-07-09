@@ -5,28 +5,32 @@ name: Post one reel to FB (hourly queue)
 # so 1/hour (max 24/day) stays comfortably under the ceiling.
 #
 # Queue      = every `card-*` release, oldest first.
-# Posted log = .github/fb-posted.txt (one tag per line), committed back after
-#              each successful post so the same reel is never published twice.
+# Posted log = fb-posted.txt on the unprotected `fb-state` branch (main is a
+#              protected branch and rejects the bot's write-back), read/written
+#              via the Contents API. Ensures a reel is never published twice.
 # Tool       = fb-cli's `post-reel`, installed on the fly straight from git.
 
 on:
-  schedule:
-    - cron: "17 * * * *" # hourly at :17
-  workflow_dispatch: {} # manual trigger for testing
+  # schedule disabled until the pipeline is verified end-to-end; re-enable after.
+  # schedule:
+  #   - cron: "17 * * * *"   # hourly at :17
+  workflow_dispatch: {} # manual trigger
 
 concurrency:
   group: fb-reel-queue
   cancel-in-progress: false
 
 permissions:
-  contents: write # to commit the updated posted-log back to the repo
+  contents: write # Contents API write to the fb-state branch
+
+env:
+  STATE_BRANCH: fb-state
+  STATE_FILE: fb-posted.txt
 
 jobs:
   post:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
       - name: Install uv
         uses: astral-sh/setup-uv@v5
 
@@ -35,21 +39,21 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          touch .github/fb-posted.txt
-          # All card-* releases, oldest first.
+          # Read the posted log from the fb-state branch (empty if absent).
+          gh api "repos/$GITHUB_REPOSITORY/contents/$STATE_FILE?ref=$STATE_BRANCH" \
+            --jq '.content' 2>/dev/null | base64 --decode > posted.txt || : > posted.txt
           mapfile -t all < <(gh release list -L 500 --json tagName,createdAt \
             -q 'sort_by(.createdAt) | .[] | select(.tagName|startswith("card-")) | .tagName')
           next=""
           for t in "${all[@]}"; do
-            if ! grep -qxF "$t" .github/fb-posted.txt; then next="$t"; break; fi
+            if ! grep -qxF "$t" posted.txt; then next="$t"; break; fi
           done
           if [ -z "$next" ]; then
             echo "queue empty — nothing to post"
-            echo "tag=" >> "$GITHUB_OUTPUT"
           else
             echo "next reel: $next"
-            echo "tag=$next" >> "$GITHUB_OUTPUT"
           fi
+          echo "tag=$next" >> "$GITHUB_OUTPUT"
 
       - name: Download reel asset
         if: steps.pick.outputs.tag != ''
@@ -74,14 +78,22 @@ jobs:
           caption=$(printf '%s\n\n%s' "$name" "$note")
           uvx --from git+https://github.com/htlin222/fb-cli fb-cli post-reel short.mp4 "$caption"
 
-      - name: Mark as posted
+      - name: Mark as posted (write back to fb-state)
         if: steps.pick.outputs.tag != ''
         env:
+          GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.pick.outputs.tag }}
         run: |
-          echo "$TAG" >> .github/fb-posted.txt
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .github/fb-posted.txt
-          git commit -m "chore(fb): posted $TAG as reel [skip ci]"
-          git push
+          # Ensure the fb-state branch exists (bootstrap from this ref's head).
+          if ! gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$STATE_BRANCH" >/dev/null 2>&1; then
+            head=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/$GITHUB_REF_NAME" --jq .object.sha)
+            gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
+              -f ref="refs/heads/$STATE_BRANCH" -f sha="$head" >/dev/null
+          fi
+          echo "$TAG" >> posted.txt
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/contents/$STATE_FILE?ref=$STATE_BRANCH" --jq .sha 2>/dev/null || true)
+          content=$(base64 -w0 < posted.txt)
+          gh api --method PUT "repos/$GITHUB_REPOSITORY/contents/$STATE_FILE" \
+            -f message="chore(fb): posted $TAG as reel [skip ci]" \
+            -f content="$content" -f branch="$STATE_BRANCH" ${sha:+-f sha="$sha"} >/dev/null
+          echo "recorded $TAG on $STATE_BRANCH"
