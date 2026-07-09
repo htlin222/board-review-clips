@@ -1,0 +1,16 @@
+{
+  "id": "nitric-oxide-depletion-and-thrombosis-in-pnh",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria",
+  "author": "Dr. Lizard",
+  "title": "How does nitric oxide depletion cause thrombosis in paroxysmal nocturnal hemoglobinuria?",
+  "answer": "Intravascular hemolysis releases free hemoglobin, which scavenges nitric oxide, causing vasoconstriction and platelet activation.",
+  "detail": [
+    "Free hemoglobin from lysed red cells binds and depletes bioavailable nitric oxide in plasma.",
+    "Nitric oxide depletion leads to smooth muscle contraction, causing abdominal pain, dysphagia, and erectile dysfunction.",
+    "Loss of nitric oxide removes its antiplatelet and vasodilatory effects, promoting thrombosis at unusual sites.",
+    "C5a from complement activation further enhances coagulation and inhibits fibrinolysis, compounding thrombotic risk."
+  ],
+  "releaseNote": "Nitric oxide depletion in paroxysmal nocturnal hemoglobinuria leads to thrombosis through vasoconstriction, platelet activation, and loss of antiplatelet and vasodilatory effects."
+}
