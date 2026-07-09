@@ -1,0 +1,13 @@
+{
+  "id": "combined-bone-marrow-and-fat-pad-biopsy-sensitivity",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "AL Amyloidosis",
+  "author": "Dr. Lizard",
+  "title": "What is the sensitivity of combined bone marrow and fat pad biopsy?",
+  "answer": "Combined bone marrow biopsy and abdominal fat pad aspiration identify 85 percent of AL amyloidosis patients.",
+  "detail": [
+    "Abdominal fat pad fine-needle aspiration alone is positive for amyloid in approximately 70 to 75 percent of AL cases. If fat pad aspiration is negative but clinical suspicion remains high, affected organ biopsy may be necessary. Alternative surrogate biopsy sites include minor salivary glands, gingiva, rectum, and skin for relatively noninvasive procedures. Congo red staining demonstrates green birefringence under polarized light but does not differentiate between amyloid types. Mass spectrometry or immunohistochemistry is required for amyloid subtyping after Congo red confirms amyloid presence."
+  ],
+  "releaseNote": "Combined bone marrow and fat pad biopsy has a high sensitivity for detecting AL amyloidosis, with a positive result in 85% of cases. Abdominal fat pad aspiration alone is less sensitive, but can be used as a noninvasive alternative."
+}
