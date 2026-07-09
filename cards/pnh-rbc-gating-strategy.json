@@ -1,0 +1,16 @@
+{
+  "id": "pnh-rbc-gating-strategy",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Paroxysmal Nocturnal Hemoglobinuria (PNH)",
+  "author": "Dr. Lizard",
+  "title": "What is the RBC gating strategy for flow cytometry in PNH diagnosis?",
+  "answer": "Red blood cells are classified into Type I, II, and III based on CD59 expression levels.",
+  "detail": [
+    "Type I cells have normal CD59 expression and are not PNH cells, serving as internal controls.",
+    "Type II cells show partial CD59 deficiency, indicating incomplete GPI anchor loss on the cell surface.",
+    "Type III cells have complete CD59 absence, representing the most complement-sensitive population with highest hemolysis risk.",
+    "Type III cells greater than 10 percent correlate with high thrombotic risk and severe hemolysis in patients."
+  ],
+  "releaseNote": "PNH diagnosis involves flow cytometry RBC gating strategy to classify red blood cells into Type I, II, and III based on CD59 expression levels, with Type III cells indicating highest hemolysis risk."
+}
