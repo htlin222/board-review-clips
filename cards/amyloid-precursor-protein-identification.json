@@ -1,0 +1,16 @@
+{
+  "id": "amyloid-precursor-protein-identification",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Amyloidosis",
+  "author": "Dr. Lizard",
+  "title": "What is the gold standard for identifying amyloid precursor proteins?",
+  "answer": "Mass spectrometry-based analysis of amyloid-containing tissue is the gold standard for identifying precursor proteins.",
+  "detail": [
+    "Laser microdissection mass spectrometry has reported sensitivity of 88 percent and specificity of 96 percent for amyloid typing.",
+    "Mass spectrometry is superior to immunohistochemistry, which showed nonspecific results in 24 percent of cases.",
+    "Immunohistochemistry for transthyretin or serum amyloid A should be performed if kappa and lambda stains are negative.",
+    "Accurate amyloid typing is essential because AL amyloidosis requires chemotherapy while ATTR amyloidosis needs different management approaches."
+  ],
+  "releaseNote": "Mass spectrometry-based analysis is the gold standard for identifying amyloid precursor proteins, offering high sensitivity and specificity, and is superior to immunohistochemistry in certain cases."
+}
