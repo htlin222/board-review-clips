@@ -1,0 +1,16 @@
+{
+  "id": "who-5-vs-icc-genetic-mds-entities",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes",
+  "author": "Dr. Lizard",
+  "title": "What is the key flexibility difference between WHO-5 and ICC for genetically-defined MDS entities?",
+  "answer": "WHO-5 allows diagnosis of genetic entities without dysplasia; ICC requires dysplasia except for multi-hit TP53.",
+  "detail": [
+    "WHO-5 permits MDS-SF3B1 and MDS-biTP53 diagnosis based solely on genetic findings without morphologic dysplasia.",
+    "ICC generally requires 10% dysplasia threshold but makes exception for multi-hit TP53 cases.",
+    "This reflects WHO-5's greater emphasis on molecular genetics over traditional morphologic criteria.",
+    "The flexibility helps capture early or subtle disease that might be missed by morphology alone."
+  ],
+  "releaseNote": "WHO-5 and ICC have different approaches to diagnosing genetically-defined MDS entities, with WHO-5 allowing diagnosis without dysplasia and ICC requiring dysplasia except for multi-hit TP53 cases."
+}
