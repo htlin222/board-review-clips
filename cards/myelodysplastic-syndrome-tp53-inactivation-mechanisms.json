@@ -1,0 +1,16 @@
+{
+  "id": "myelodysplastic-syndrome-tp53-inactivation-mechanisms",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndrome",
+  "author": "Dr. Lizard",
+  "title": "What mechanisms lead to biallelic TP53 inactivation in myelodysplastic syndrome?",
+  "answer": "Biallelic inactivation occurs via two mutations, mutation plus deletion, copy-neutral LOH, or VAF over 50%",
+  "detail": [
+    "Two distinct TP53 mutations on different alleles is the first mechanism of biallelic inactivation.",
+    "One mutation plus deletion of the wild-type allele at 17p is the second mechanism.",
+    "One mutation plus copy-neutral loss of heterozygosity at 17p is the third mechanism.",
+    "VAF exceeding 50% for a single mutation implies homozygosity and counts as biallelic inactivation."
+  ],
+  "releaseNote": "This card summarizes the mechanisms leading to biallelic TP53 inactivation in myelodysplastic syndrome, including two distinct mutations, mutation plus deletion, copy-neutral LOH, and VAF over 50%"
+}
