@@ -11,3 +11,4 @@ card-mechanical-mitral-valve-inr-target
 card-c3d-positivity-on-pnh
 card-cmv-viral-load-escalation-after-hsct
 card-complement-inhibitors-hemoglobin-improvement
+card-c5-blockade-prevents-thrombosis-in-pnh
