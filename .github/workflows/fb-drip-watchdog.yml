@@ -1,0 +1,117 @@
+name: FB drip watchdog
+
+# Freshness check for the reel drip (post-reel-queue.yml). GitHub cron is
+# best-effort — measured on this repo, an hourly spec fires roughly every
+# 3.5 h — and failures are silent. This watchdog alerts only on *real* death:
+# unposted cards exist but nothing has been posted for > max_age_hours
+# (default 12 h, well above throttle noise).
+#
+# Alert channel = a GitHub issue labeled `fb-watchdog` (one at a time; closed
+# automatically when the drip recovers). An empty queue is healthy.
+
+on:
+  schedule:
+    - cron: "43 */6 * * *" # every 6 h at :43 (also throttled; fine)
+  workflow_dispatch:
+    inputs:
+      max_age_hours:
+        description: "alert if no post for this many hours (while backlog exists)"
+        default: "12"
+      simulate_stale:
+        description: "force the stale path to test alerting"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  STATE_BRANCH: fb-state
+  STATE_FILE: fb-posted.txt
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assess drip health
+        id: health
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MAX_AGE_HOURS: ${{ inputs.max_age_hours || '12' }}
+          SIMULATE: ${{ inputs.simulate_stale || 'false' }}
+        run: |
+          # Unposted = card-* releases minus the posted log.
+          gh api "repos/$GITHUB_REPOSITORY/contents/$STATE_FILE?ref=$STATE_BRANCH" \
+            --jq '.content' 2>/dev/null | base64 --decode > posted.txt || : > posted.txt
+          mapfile -t all < <(gh release list -R "$GITHUB_REPOSITORY" -L 500 \
+            --json tagName -q '.[] | select(.tagName|startswith("card-")) | .tagName')
+          unposted=0
+          for t in "${all[@]}"; do grep -qxF "$t" posted.txt || unposted=$((unposted+1)); done
+
+          # Age of the newest successful post = last commit on the state branch.
+          last=$(gh api "repos/$GITHUB_REPOSITORY/commits?sha=$STATE_BRANCH&per_page=1" \
+            --jq '.[0].commit.committer.date')
+          age_h=$(( ( $(date +%s) - $(date -d "$last" +%s) ) / 3600 ))
+
+          echo "unposted=$unposted  last_post=$last  age_h=${age_h}h  max=${MAX_AGE_HOURS}h"
+          stale=false
+          if [ "$SIMULATE" = "true" ]; then
+            stale=true
+          elif [ "$unposted" -gt 0 ] && [ "$age_h" -ge "$MAX_AGE_HOURS" ]; then
+            stale=true
+          fi
+          {
+            echo "stale=$stale"
+            echo "unposted=$unposted"
+            echo "last=$last"
+            echo "age_h=$age_h"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Raise alert issue
+        if: steps.health.outputs.stale == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing=$(gh issue list -R "$GITHUB_REPOSITORY" --label fb-watchdog \
+            --state open --json number -q '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "alert issue #$existing already open — not duplicating"
+            exit 0
+          fi
+          runs=$(gh run list -R "$GITHUB_REPOSITORY" --workflow post-reel-queue.yml -L 5 \
+            --json conclusion,createdAt,event \
+            -q '.[] | "- \(.createdAt)  \(.event)  **\(.conclusion)**"')
+          gh issue create -R "$GITHUB_REPOSITORY" --label fb-watchdog \
+            --title "FB reel drip is stale (no post for ${{ steps.health.outputs.age_h }}h, ${{ steps.health.outputs.unposted }} cards waiting)" \
+            --body "$(cat <<EOF
+          The reel drip has not recorded a successful post since
+          **${{ steps.health.outputs.last }}** (${{ steps.health.outputs.age_h }} h ago)
+          while **${{ steps.health.outputs.unposted }}** unposted card(s) remain.
+
+          Recent \`post-reel-queue\` runs:
+          $runs
+
+          Likely causes, in order (see the wiki runbook):
+          1. \`FB_PAGE_ACCESS_TOKEN\` expired/revoked → refresh via \`make auth\` in fb-cli, update the repo secret
+          2. Workflow failing (check the runs above)
+          3. GitHub disabled the schedule (60-day repo inactivity) → re-enable in the Actions tab
+
+          This issue closes automatically when the drip posts again.
+          _Opened by fb-drip-watchdog._
+          EOF
+          )"
+
+      - name: Auto-close recovered alert
+        if: steps.health.outputs.stale == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing=$(gh issue list -R "$GITHUB_REPOSITORY" --label fb-watchdog \
+            --state open --json number -q '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" -R "$GITHUB_REPOSITORY" \
+              -c "Drip is healthy again (last post ${{ steps.health.outputs.last }}, ${{ steps.health.outputs.unposted }} unposted). Auto-closed by fb-drip-watchdog."
+          else
+            echo "healthy — no open alert"
+          fi
