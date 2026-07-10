@@ -1,0 +1,16 @@
+{
+  "id": "morphologically-defined-mds-dysplasia-threshold",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "MDS Classification",
+  "author": "Dr. Lizard",
+  "title": "What is the dysplasia threshold required for morphologically-defined MDS in ICC and WHO-5 classifications?",
+  "answer": "Both ICC and WHO-5 require at least 10% dysplasia in one lineage for morphologically-defined MDS.",
+  "detail": [
+    "WHO-5 allows diagnosis of genetically-defined entities without meeting the 10% dysplasia threshold if defining mutations are present.",
+    "Genetically-defined entities in WHO-5 include MDS-SF3B1, MDS-biTP53, and MDS with isolated del(5q).",
+    "ICC requires 10% dysplasia for all MDS diagnoses except multi-hit TP53 cases which can be diagnosed without dysplasia.",
+    "This represents a key flexibility difference between the two classification systems for genetic entities."
+  ],
+  "releaseNote": "The dysplasia threshold for morphologically-defined MDS varies between ICC and WHO-5 classifications, with ICC requiring 10% dysplasia for all diagnoses except multi-hit TP53 cases."
+}
