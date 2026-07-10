@@ -1,0 +1,16 @@
+{
+  "id": "low-blast-mds-sf3b1-threshold",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes",
+  "author": "Dr. Lizard",
+  "title": "What defines the blast count threshold for low-blast MDS-SF3B1 in both classification systems?",
+  "answer": "Both systems require less than 2% blasts in peripheral blood and less than 5% in bone marrow.",
+  "detail": [
+    "These thresholds ensure the SF3B1 category captures lower-risk disease with favorable prognosis.",
+    "Higher blast counts would move the case into different MDS categories despite SF3B1 mutation presence.",
+    "The peripheral blood threshold of 2% is more stringent than the bone marrow threshold.",
+    "Both thresholds must be met simultaneously for MDS-SF3B1 diagnosis in either system."
+  ],
+  "releaseNote": "The blast count threshold for low-blast MDS-SF3B1 in both classification systems is less than 2% in peripheral blood and less than 5% in bone marrow."
+}
