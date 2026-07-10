@@ -1,0 +1,16 @@
+{
+  "id": "mds-sf3b1-diagnostic-criteria",
+  "main": "Board Review",
+  "section": "Hematology",
+  "topic": "Myelodysplastic Syndromes",
+  "author": "Dr. Lizard",
+  "title": "What are the diagnostic criteria for MDS-SF3B1 in WHO-5 versus ICC classifications?",
+  "answer": "Both require SF3B1 mutation with low blasts and exclude del(5q), monosomy 7, and complex karyotype.",
+  "detail": [
+    "Low blast threshold is less than 2% in peripheral blood and less than 5% in bone marrow.",
+    "WHO-5 also allows diagnosis with 15% or more ring sideroblasts even without SF3B1 mutation present.",
+    "ICC requires SF3B1 mutation for this category; ring sideroblasts without mutation become MDS NOS.",
+    "Both systems exclude cases with del(5q), monosomy 7, or complex karyotype from the SF3B1 category."
+  ],
+  "releaseNote": "The diagnostic criteria for MDS-SF3B1 in WHO-5 and ICC classifications require SF3B1 mutation with low blasts and exclude specific cytogenetic abnormalities."
+}
