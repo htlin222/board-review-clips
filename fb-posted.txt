@@ -14,3 +14,4 @@ card-complement-inhibitors-hemoglobin-improvement
 card-c5-blockade-prevents-thrombosis-in-pnh
 card-complement-inhibitors-vaccination-protocols
 card-breakthrough-hemolysis-with-c3-inhibitors
+card-factor-b-inhibitors-vs-c3-inhibitors-for-pnh
