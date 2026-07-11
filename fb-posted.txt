@@ -20,3 +20,4 @@ card-narsoplimab-ineffective-pnh
 card-budd-chiari-syndrome-diagnosis-in-pnh
 card-flaer-binding-to-pnh-cells
 card-paroxysmal-nocturnal-hemoglobinuria-genes
+card-nitric-oxide-depletion-and-thrombosis-in-pnh
