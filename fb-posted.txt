@@ -32,3 +32,4 @@ card-combined-bone-marrow-and-fat-pad-biopsy-sensitivity
 card-al-amyloidosis-organ-involvement
 card-amyloid-precursor-protein-identification
 card-tp53-mutated-mds-classification-discrepancy
+card-myeloid-neoplasm-mutated-tp53-icc-vs-who-5
